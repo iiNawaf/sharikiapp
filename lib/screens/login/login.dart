@@ -21,7 +21,7 @@ class LoginScreen extends StatelessWidget {
                 Image.asset('./assets/images/shariki_logo.png'),
               ],
             ),
-            SizedBox(height: 50),
+            SizedBox(height: 100),
             Text(
               "تسجيل الدخول",
               style: TextStyle(
@@ -45,10 +45,10 @@ class LoginScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Text("ماعندك حساب؟ ", style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold)),
                 GestureDetector(
                   onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ChooseAccountTypeScreen())),
-                  child: Text("ماعندك حساب؟ ", style: TextStyle(fontSize: 16, color: textColor, fontWeight: FontWeight.bold))),
-                Text("سجل الآن", style: TextStyle(fontSize: 16, color: primaryColor, fontWeight: FontWeight.bold)),
+                  child: Text("سجل الآن", style: TextStyle(fontSize: 16, color: primaryColor, fontWeight: FontWeight.bold))),
               ],
             )
           ],

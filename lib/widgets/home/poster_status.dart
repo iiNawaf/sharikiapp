@@ -7,14 +7,14 @@ class PosterStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 20,
+      height: 25,
       padding: EdgeInsets.only(right: 10, left: 10),
       decoration: BoxDecoration(
           color: dangerColor, borderRadius: BorderRadius.circular(25)),
       child: Center(
           child: Text(
         "مغلق",
-        style: TextStyle(fontSize: 11, color: whiteColor),
+        style: TextStyle(fontSize: 12, color: whiteColor, fontWeight: FontWeight.bold),
       )),
     );
   }

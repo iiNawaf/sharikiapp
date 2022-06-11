@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sharikiapp/screens/sign_up/normal_sign_up.dart';
 import 'package:sharikiapp/screens/sign_up/project_sign_up.dart';
 import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/widgets/appbar.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 import 'package:sharikiapp/widgets/sign_up/account_type.dart';
 
@@ -27,16 +28,18 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: SharedAppBar(title: "", isAppManager: false),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 50),
-              _pageTitle(),
-              SizedBox(height: 100),
-              Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _pageTitle(),
+            SizedBox(height: 100),
+            Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AccountType(
@@ -67,31 +70,38 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
                       }),
                 ],
               ),
-              SizedBox(height: 15),
-              Text(
-                description,
-                style: TextStyle(fontSize: 15, color: textColor),
-              ),
-              SizedBox(height: 40),
-              _accTypes != AccTypes.undefined
-                  ? Column(
-                      children: [
-                        SubmitButton(
-                          submit: () {
-                            if (_accTypes == AccTypes.individual) {
-                              Navigator.push(context,MaterialPageRoute(builder: (context) => IndividualSignUpScreen()));
-                            }else if(_accTypes == AccTypes.project){
-                              Navigator.push(context,MaterialPageRoute(builder: (context) => ProjectSignUpScreen()));
-                            }
-                          },
-                          title: "التالي",
-                        ),
-                        _goBackToLogin(context),
-                      ],
-                    )
-                  : Container(),
-            ],
-          ),
+            SizedBox(height: 15),
+            Text(
+              description,
+              style: TextStyle(fontSize: 15, color: textColor),
+            ),
+            SizedBox(height: 80),
+            _accTypes != AccTypes.undefined
+                ? Column(
+                    children: [
+                      SubmitButton(
+                        submit: () {
+                          if (_accTypes == AccTypes.individual) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        IndividualSignUpScreen()));
+                          } else if (_accTypes == AccTypes.project) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ProjectSignUpScreen()));
+                          }
+                        },
+                        title: "التالي",
+                      ),
+                      _goBackToLogin(context),
+                    ],
+                  )
+                : Container(),
+          ],
         ),
       ),
     );
@@ -100,38 +110,29 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
 
 Widget _pageTitle() {
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Row(
-        children: [
-          Text(
-            "تسجيل حساب جديد",
-            style: TextStyle(
-                fontSize: 26, fontWeight: FontWeight.bold, color: primaryColor),
-          ),
-        ],
+      Text(
+        "تسجيل حساب جديد",
+        style: TextStyle(
+            fontSize: 26, fontWeight: FontWeight.bold, color: primaryColor),
       ),
-      Row(
-        children: [
-          Text(
-            "اختر نوع الحساب",
-            style: TextStyle(
-                fontSize: 18, color: textColor, fontWeight: FontWeight.bold),
-          ),
-        ],
+      Text(
+        "اختر نوع الحساب",
+        style: TextStyle(
+            fontSize: 18, color: textColor, fontWeight: FontWeight.bold),
       ),
     ],
   );
 }
 
-Widget _goBackToLogin(BuildContext context){
+Widget _goBackToLogin(BuildContext context) {
   return GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: Text(
-                            "عندك حساب؟",
-                            style: TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        );
+    onTap: () => Navigator.pop(context),
+    child: Text(
+      "عندك حساب؟",
+      style: TextStyle(
+          color: primaryColor, fontWeight: FontWeight.bold, fontSize: 16),
+    ),
+  );
 }

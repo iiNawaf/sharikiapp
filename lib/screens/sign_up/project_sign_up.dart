@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/widgets/appbar.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 
@@ -10,24 +11,18 @@ class ProjectSignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(60),
+        child: SharedAppBar(title: "", isAppManager: false),
+      ),
       body: Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 40,
-              ),
-              GestureDetector(
-                onTap: ()=> Navigator.pop(context),
-                  child: Icon(
-                Icons.arrow_back_ios,
-                color: textColor,
-              )),
-              SizedBox(height: 10),
               _pageTitle(),
-              SizedBox(height: 50),
+              SizedBox(height: 100),
               InputTextField(title: "اسم المشروع", isObsecure: false),
               SizedBox(height: 20),
               InputTextField(title: "البريد الالكتروني", isObsecure: false),

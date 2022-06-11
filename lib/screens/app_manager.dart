@@ -27,17 +27,19 @@ class _AppManagerState extends State<AppManager> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
         child: SharedAppBar(
+          isAppManager: true,
           title: _currentIndex == 0 ? "الرئيسية" : _currentIndex == 1 ? "طلب بحث عن شريك" : "",
         ),
       ),
-      body: _pages.elementAt(_currentIndex),
-      bottomNavigationBar: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Container(
+      body: Padding(
+        padding: EdgeInsets.all(15),
+        child: _pages.elementAt(_currentIndex),
+      ),
+      bottomNavigationBar: Container(
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: primaryColor,
-              borderRadius: BorderRadius.circular(10)
+              borderRadius: BorderRadius.circular(15)
             ),
             child: BottomNavigationBar(
               backgroundColor: primaryColor,
@@ -53,7 +55,7 @@ class _AppManagerState extends State<AppManager> {
                 _bottomNavItem("./assets/icons/user.png", "●")
               ],
             ),
-          )),
+          )
     );
   }
 }

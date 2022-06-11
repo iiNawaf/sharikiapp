@@ -3,18 +3,22 @@ import 'package:sharikiapp/styles.dart';
 
 class SharedAppBar extends StatelessWidget {
   String title;
-  SharedAppBar({required this.title});
+  bool isAppManager;
+  SharedAppBar({required this.title, required this.isAppManager});
   
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Color.fromRGBO(0, 0, 0, 0),
       elevation: 0,
+      iconTheme: IconThemeData(color: textColor),
       centerTitle: true,
       title: Text(title, style: TextStyle(color: textColor, fontSize: 18)),
-      leading: Image.asset('./assets/icons/menu.png'),
+      leading: isAppManager == true ? Image.asset('./assets/icons/menu.png') : null,
       actions: [
-        Image.asset('./assets/icons/notification.png')
+        isAppManager == true 
+        ? Image.asset('./assets/icons/notification.png') 
+        : Container()
       ],
     );
   }

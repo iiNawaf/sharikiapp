@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sharikiapp/screens/app_manager.dart';
-import 'package:sharikiapp/screens/sign_up/choose_account_type.dart';
+import 'package:sharikiapp/screens/login/login.dart';
 import 'package:sharikiapp/styles.dart';
 
 void main() {
