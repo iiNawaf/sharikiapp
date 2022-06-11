@@ -5,6 +5,8 @@ import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 
 class LoginScreen extends StatelessWidget {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +30,9 @@ class LoginScreen extends StatelessWidget {
                   fontSize: 26, fontWeight: FontWeight.bold, color: primaryColor),
             ),
             SizedBox(height: 30),
-            InputTextField(title: "البريد الالكتروني", isObsecure: false),
+            InputTextField(title: "البريد الالكتروني", isObsecure: false, controller: _emailController, maxLines: 1),
             SizedBox(height: 25),
-            InputTextField(title: "كلمة المرور", isObsecure: true),
+            InputTextField(title: "كلمة المرور", isObsecure: true, controller: _passwordController, maxLines: 1),
             SizedBox(height: 5),
             Text(
               "نسيت كلمة المرور",

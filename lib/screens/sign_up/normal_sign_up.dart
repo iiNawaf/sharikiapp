@@ -5,6 +5,12 @@ import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 
 class IndividualSignUpScreen extends StatelessWidget {
+  TextEditingController _firstNameController = TextEditingController();
+  TextEditingController _lastNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,22 +29,21 @@ class IndividualSignUpScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child:
-                        InputTextField(title: "الاسم الاول", isObsecure: false),
+                        InputTextField(title: "الاسم الاول", isObsecure: false, controller: _firstNameController, maxLines: 1),
                   ),
                   SizedBox(width: 10),
                   Expanded(
                     child: InputTextField(
-                        title: "الاسم الاخير", isObsecure: false),
+                        title: "الاسم الاخير", isObsecure: false, controller: _lastNameController, maxLines: 1),
                   ),
                 ],
               ),
               SizedBox(height: 20),
-              InputTextField(title: "البريد الالكتروني", isObsecure: false),
+              InputTextField(title: "البريد الالكتروني", isObsecure: false, controller: _emailController, maxLines: 1),
               SizedBox(height: 20),
-              InputTextField(
-                  title: "رقم الجوال (يبدأ بـ05)", isObsecure: false),
+              InputTextField(title: "رقم الجوال (يبدأ بـ05)", isObsecure: false, controller: _phoneController, maxLines: 1),
               SizedBox(height: 20),
-              InputTextField(title: "كلمة المرور", isObsecure: true),
+              InputTextField(title: "كلمة المرور", isObsecure: true, controller: _passwordController, maxLines: 1),
               SizedBox(height: 30),
               Row(
                 children: [

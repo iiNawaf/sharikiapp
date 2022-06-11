@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/screens/add_new_request/add_new_request.dart';
 import 'package:sharikiapp/screens/home/home.dart';
+import 'package:sharikiapp/screens/profile/my_profile.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/appbar.dart';
 
@@ -13,7 +14,7 @@ class AppManager extends StatefulWidget {
 
 class _AppManagerState extends State<AppManager> {
   int _currentIndex = 0;
-  List<Widget> _pages = [HomeScreen(), AddNewRequestScreen(), Text("2")];
+  List<Widget> _pages = [HomeScreen(), AddNewRequestScreen(), MyProfileScreen()];
 
   void _switchIndex(int index) {
     setState(() {
@@ -28,7 +29,7 @@ class _AppManagerState extends State<AppManager> {
         preferredSize: Size.fromHeight(60),
         child: SharedAppBar(
           isAppManager: true,
-          title: _currentIndex == 0 ? "الرئيسية" : _currentIndex == 1 ? "طلب بحث عن شريك" : "",
+          title: _currentIndex == 0 ? "الرئيسية" : _currentIndex == 1 ? "طلب بحث عن شريك" : "الملف الشخصي",
         ),
       ),
       body: Padding(
@@ -39,7 +40,10 @@ class _AppManagerState extends State<AppManager> {
             padding: EdgeInsets.all(5),
             decoration: BoxDecoration(
               color: primaryColor,
-              borderRadius: BorderRadius.circular(15)
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(15),
+                topRight: Radius.circular(15)
+              )
             ),
             child: BottomNavigationBar(
               backgroundColor: primaryColor,
@@ -62,7 +66,7 @@ class _AppManagerState extends State<AppManager> {
 
 BottomNavigationBarItem _bottomNavItem(String imgPath, String label) {
   return BottomNavigationBarItem(
-    icon: Image.asset(imgPath),
+    icon: Image.asset(imgPath, height: 25,),
     label: label,
     tooltip: ""
   );

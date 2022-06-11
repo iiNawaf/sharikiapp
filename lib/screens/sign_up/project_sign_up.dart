@@ -6,7 +6,10 @@ import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 
 
 class ProjectSignUpScreen extends StatelessWidget {
-  const ProjectSignUpScreen({Key? key}) : super(key: key);
+  TextEditingController _projectNameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +26,13 @@ class ProjectSignUpScreen extends StatelessWidget {
             children: [
               _pageTitle(),
               SizedBox(height: 100),
-              InputTextField(title: "اسم المشروع", isObsecure: false),
+              InputTextField(title: "اسم المشروع", isObsecure: false, controller: _projectNameController, maxLines: 1),
               SizedBox(height: 20),
-              InputTextField(title: "البريد الالكتروني", isObsecure: false),
+              InputTextField(title: "البريد الالكتروني", isObsecure: false, controller: _emailController, maxLines: 1),
               SizedBox(height: 20),
-              InputTextField(
-                  title: "رقم الجوال (يبدأ بـ05)", isObsecure: false),
+              InputTextField(title: "رقم الجوال (يبدأ بـ05)", isObsecure: false, controller: _phoneController, maxLines: 1),
               SizedBox(height: 20),
-              InputTextField(title: "كلمة المرور", isObsecure: true),
+              InputTextField(title: "كلمة المرور", isObsecure: true, controller: _passwordController, maxLines: 1),
               SizedBox(height: 30),
               Row(
                 children: [
