@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sharikiapp/screens/sign_up/normal_sign_up.dart';
-import 'package:sharikiapp/screens/sign_up/project_sign_up.dart';
+import 'package:sharikiapp/screens/sign_up/sign_up.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/appbar.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
@@ -43,7 +42,7 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   AccountType(
-                      imgPath: './assets/icons/user.png',
+                      imgPath: "./assets/icons/individual.png",
                       title: "فرد",
                       borderColor: _accTypes == AccTypes.individual
                           ? primaryColor
@@ -86,13 +85,13 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        IndividualSignUpScreen()));
+                                        SignUpScreen(accType: _accTypes)));
                           } else if (_accTypes == AccTypes.project) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        ProjectSignUpScreen()));
+                                        SignUpScreen(accType: _accTypes)));
                           }
                         },
                         title: "التالي",

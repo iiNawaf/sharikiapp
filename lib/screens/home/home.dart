@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/home/contact_btn.dart';
 import 'package:sharikiapp/widgets/home/home_slider.dart';
@@ -16,10 +18,12 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context);
     return SingleChildScrollView(
         child: Column(
           children: [
             HomeSlider(),
+            TextButton(onPressed: () => auth.logout(), child: Text("Logout")),
             SizedBox(height: 10),
             Column(
                 children: [

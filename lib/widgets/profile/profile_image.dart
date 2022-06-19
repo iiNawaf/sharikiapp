@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({Key? key}) : super(key: key);
+  String imgPath;
+  ProfileImage({required this.imgPath});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,9 @@ class ProfileImage extends StatelessWidget {
       decoration: BoxDecoration(
           color: whiteColor, borderRadius: BorderRadius.circular(100)),
       child: Center(
-        child: Image.asset('./assets/icons/user.png'),
+        child: imgPath == ""
+        ? Image.asset('./assets/icons/individual.png') 
+        : Text("Img"),
       ),
     );
   }

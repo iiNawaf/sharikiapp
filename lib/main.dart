@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/app_manager.dart';
 import 'package:sharikiapp/screens/login/login.dart';
 import 'package:sharikiapp/styles.dart';
@@ -12,24 +14,50 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
       ],
-      supportedLocales: [
-        Locale("ar", "AE"),
-      ],
-      theme: ThemeData(
-        fontFamily: 'Cairo',
-        primaryColor: primaryColor,
-        scaffoldBackgroundColor: bgColor,
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
+      child: Consumer<AuthProvider>(
+        builder: (context, authProvider, _) {
+          return GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+            },
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: [
+                Locale("ar", "AE"),
+              ],
+              theme: ThemeData(
+                fontFamily: 'Cairo',
+                primaryColor: primaryColor,
+                scaffoldBackgroundColor: bgColor,
+                splashColor: Colors.transparent,
+                highlightColor: Colors.transparent,
+              ),
+              home: FutureBuilder(
+                future: authProvider.isLoggedInUser(),
+                builder: (context, snapshot) {
+                  return snapshot.connectionState == ConnectionState.waiting
+                      ? Center(child: Text("Splash"))
+                      : snapshot.data == true
+                          ? AppManager()
+                          : LoginScreen();
+                },
+              ),
+            ),
+          );
+        },
       ),
-      home: AppManager(),
     );
   }
 }
