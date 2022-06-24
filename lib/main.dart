@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/app_manager.dart';
 import 'package:sharikiapp/screens/login/login.dart';
+import 'package:sharikiapp/screens/splash/splash.dart';
 import 'package:sharikiapp/styles.dart';
 
 void main() {
@@ -45,13 +46,11 @@ class MyApp extends StatelessWidget {
                 highlightColor: Colors.transparent,
               ),
               home: FutureBuilder(
-                future: authProvider.isLoggedInUser(),
+                future: authProvider.autoLogin(),
                 builder: (context, snapshot) {
-                  return snapshot.connectionState == ConnectionState.waiting
-                      ? Center(child: Text("Splash"))
-                      : snapshot.data == true
-                          ? AppManager()
-                          : LoginScreen();
+                  return snapshot.connectionState == ConnectionState.done
+                      ? snapshot.hasData ? AppManager() : LoginScreen() 
+                      : SplashScreen();
                 },
               ),
             ),

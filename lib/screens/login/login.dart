@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ],
             ),
             TextButton(
-              onPressed: () async => auth.isLoggedInUser(),
+              onPressed: () async => auth.autoLogin(),
               child: Text("Check Info")
               )
           ],

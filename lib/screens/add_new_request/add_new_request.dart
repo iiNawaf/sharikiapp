@@ -14,7 +14,7 @@ class AddNewRequestScreen extends StatelessWidget {
       child: Column(
           children: [
             SizedBox(height: 50),
-            InputDropDown(title: "اختر المجال المطلوب",),
+            // InputDropDown(title: "اختر المجال المطلوب",),
             SizedBox(height: 20),
             InputTextField(title: "سنوات الخبرة المطلوبة", isObsecure: false, controller: _requestedExperienceYearsController, maxLines: 1),
             SizedBox(height: 20),

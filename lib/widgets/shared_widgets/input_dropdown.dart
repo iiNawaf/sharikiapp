@@ -4,20 +4,21 @@ import 'package:sharikiapp/styles.dart';
 import 'dart:io' show Platform;
 
 class InputDropDown extends StatefulWidget {
+  static String selectedValue = "";
   String title;
-  InputDropDown({required this.title});
+  List<String> list;
+  String val;
+  InputDropDown({required this.title, required this.list, required this.val});
   @override
   State<InputDropDown> createState() => _InputDropDownState();
 }
 
 class _InputDropDownState extends State<InputDropDown> {
-  String selectedValue = "";
-  List<String> list = ["", "مبرمج", "زبال"];
 
   @override
-  void dispose() {
-    selectedValue = "اختر المجال المطلوب";
-    super.dispose();
+  void initState() {
+    InputDropDown.selectedValue = widget.val;
+    super.initState();
   }
 
   @override
@@ -35,7 +36,7 @@ class _InputDropDownState extends State<InputDropDown> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      selectedValue,
+                      InputDropDown.selectedValue,
                       style: TextStyle(
                           fontSize: 16,
                           color: inputTextColor),
@@ -59,15 +60,15 @@ class _InputDropDownState extends State<InputDropDown> {
                   children: [
                     Expanded(
                       child: DropdownButton(
-                        value: selectedValue,
+                        value: InputDropDown.selectedValue,
                         iconSize: 0.0,
                         underline: Container(),
                         onChanged: (String? newValue) {
                           setState(() {
-                            selectedValue = newValue!;
+                            InputDropDown.selectedValue = newValue!;
                           });
                         },
-                        items: list.map<DropdownMenuItem<String>>((String value) {
+                        items: widget.list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(
@@ -97,9 +98,9 @@ class _InputDropDownState extends State<InputDropDown> {
               height: MediaQuery.of(context).copyWith().size.height * 0.25,
               color: Colors.white,
               child: CupertinoPicker(
-                children: list.map((e) => Text(e)).toList(),
+                children: widget.list.map((e) => Text(e)).toList(),
                 onSelectedItemChanged: (value) {
-                  selectedValue = list[value].toString();
+                  InputDropDown.selectedValue = widget.list[value].toString();
                   setState(() {});
                 },
                 itemExtent: 30,
@@ -119,9 +120,9 @@ class _InputDropDownState extends State<InputDropDown> {
               height: MediaQuery.of(context).copyWith().size.height * 0.25,
               color: Colors.white,
               child: CupertinoPicker(
-                children: list.map((e) => Text(e)).toList(),
+                children: widget.list.map((e) => Text(e)).toList(),
                 onSelectedItemChanged: (value) {
-                  selectedValue = list[value].toString();
+                  InputDropDown.selectedValue = widget.list[value].toString();
                   setState(() {});
                 },
                 itemExtent: 30,

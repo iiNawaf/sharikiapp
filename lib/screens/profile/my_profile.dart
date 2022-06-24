@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sharikiapp/models/city.dart';
+import 'package:sharikiapp/models/major.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/profile/change_profile_image_btn.dart';
-import 'package:sharikiapp/widgets/profile/profile_majors.dart';
 import 'package:sharikiapp/widgets/profile/profile_image.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_dropdown.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
@@ -17,8 +21,10 @@ class MyProfileScreen extends StatefulWidget {
 class _MyProfileScreenState extends State<MyProfileScreen> {
   TextEditingController _firstNameController = TextEditingController();
   TextEditingController _lastNameController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  TextEditingController _bioController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
+  List<dynamic> currentUserMajors = [];
+  bool isLoading = false;
 
   @override
   void didChangeDependencies() {
@@ -26,11 +32,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     if (authProvider != null) {
       _firstNameController.text = authProvider.loggedInUser!.firstName;
       _lastNameController.text = authProvider.loggedInUser!.lastName;
-      _descriptionController.text = authProvider.loggedInUser!.bio;
-      _phoneController.text = "0" + authProvider.loggedInUser!.phoneNumber.toString();
+      _bioController.text = authProvider.loggedInUser!.bio;
+      _phoneController.text = authProvider.loggedInUser!.phoneNumber;
+      currentUserMajors = authProvider.loggedInUser!.majors;
     }
     super.didChangeDependencies();
   }
+
+  City city = City();
+  Major major = Major();
 
   @override
   Widget build(BuildContext context) {
@@ -43,33 +53,34 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 SizedBox(height: 10),
                 ChangeProfileImageBtn(),
                 SizedBox(height: 20),
-                auth.loggedInUser!.accountType == "individual" 
-                ? Row(
-                  children: [
-                    Expanded(
-                        child: InputTextField(
-                            title: "الاسم الاول",
-                            isObsecure: false,
-                            controller: _firstNameController,
-                            maxLines: 1)),
-                    SizedBox(width: 10),
-                    Expanded(
-                        child: InputTextField(
-                            title: "الاسم الاخير",
-                            isObsecure: false,
-                            controller: _lastNameController,
-                            maxLines: 1)),
-                  ],
-                ) : InputTextField(
-                            title: "اسم المشروع",
-                            isObsecure: false,
-                            controller: _firstNameController,
-                            maxLines: 1),
+                auth.loggedInUser!.accountType == "individual"
+                    ? Row(
+                        children: [
+                          Expanded(
+                              child: InputTextField(
+                                  title: "الاسم الاول",
+                                  isObsecure: false,
+                                  controller: _firstNameController,
+                                  maxLines: 1)),
+                          SizedBox(width: 10),
+                          Expanded(
+                              child: InputTextField(
+                                  title: "الاسم الاخير",
+                                  isObsecure: false,
+                                  controller: _lastNameController,
+                                  maxLines: 1)),
+                        ],
+                      )
+                    : InputTextField(
+                        title: "اسم المشروع",
+                        isObsecure: false,
+                        controller: _firstNameController,
+                        maxLines: 1),
                 SizedBox(height: 15),
                 InputTextField(
                     title: "الوصف",
                     isObsecure: false,
-                    controller: _descriptionController,
+                    controller: _bioController,
                     maxLines: 3),
                 SizedBox(height: 15),
                 InputTextField(
@@ -78,32 +89,73 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     controller: _phoneController,
                     maxLines: 1),
                 SizedBox(height: 15),
-                InputDropDown(title: "${auth.loggedInUser!.city == "" ? "اختر المدينة" : auth.loggedInUser!.city}"),
+                InputDropDown(
+                  title:
+                      "${auth.loggedInUser!.city == "" ? "اختر المدينة" : auth.loggedInUser!.city}",
+                  list: city.cities.values.toList(),
+                  val: auth.loggedInUser!.city,
+                ),
                 SizedBox(height: 15),
                 auth.loggedInUser!.accountType == "individual"
-                    ? Row(
-                      children: [
-                        Text(
-                            "الخبرات (3 كحد أقصى)",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                color: textColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
-                          ),
-                      ],
-                    )
+                    ? _majorsLabel()
                     : Container(),
-                auth.loggedInUser!.accountType == "individual"
-                    ? ProfileMajors()
-                    : InputDropDown(title: "اختر مجال المشروع"),
+                Container(
+                  decoration: BoxDecoration(
+                  color: whiteColor, borderRadius: BorderRadius.circular(10)),
+                  child: MultiSelectDialogField(
+                    items: major.majors.values
+                        .map((e) => MultiSelectItem(e, e))
+                        .toList(),
+                    listType: MultiSelectListType.CHIP,
+                    initialValue: currentUserMajors,
+                    decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
+                    onConfirm: (values) {
+                      currentUserMajors = values;
+                    },
+                  ),
+                ),
                 SizedBox(height: 20),
-                SubmitButton(title: "حفظ", submit: () {})
+                isLoading
+                    ? ButtonLoading()
+                    : SubmitButton(
+                        title: "حفظ",
+                        submit: () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          final result = await auth.updateUserProfileInfo(
+                            _firstNameController.text,
+                            _lastNameController.text,
+                            _bioController.text,
+                            _phoneController.text,
+                            InputDropDown.selectedValue,
+                            currentUserMajors,
+                          );
+                          setState(() {
+                            isLoading = false;
+                          });
+
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(content: Text(result)));
+                        })
               ],
             ),
           )
         : Center(
             child: Text("Unauthorized Access."),
           );
+  }
+
+  Widget _majorsLabel() {
+    return Row(
+      children: [
+        Text(
+          "الخبرات (3 كحد أقصى)",
+          textAlign: TextAlign.start,
+          style: TextStyle(
+              color: textColor, fontWeight: FontWeight.bold, fontSize: 18),
+        ),
+      ],
+    );
   }
 }

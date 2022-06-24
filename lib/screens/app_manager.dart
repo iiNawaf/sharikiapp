@@ -8,14 +8,12 @@ import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/appbar.dart';
 
 class AppManager extends StatefulWidget {
-  const AppManager({Key? key}) : super(key: key);
-
+  static int currentIndex = 0;
   @override
   State<AppManager> createState() => _AppManagerState();
 }
 
 class _AppManagerState extends State<AppManager> {
-  int _currentIndex = 0;
   List<Widget> _pages = [
     HomeScreen(), 
     AddNewRequestScreen(), 
@@ -24,7 +22,7 @@ class _AppManagerState extends State<AppManager> {
 
   void _switchIndex(int index) {
     setState(() {
-      _currentIndex = index;
+      AppManager.currentIndex = index;
     });
   }
 
@@ -39,13 +37,13 @@ class _AppManagerState extends State<AppManager> {
         preferredSize: Size.fromHeight(60),
         child: SharedAppBar(
           isAppManager: true,
-          title: _currentIndex == 0 ? "الرئيسية" 
-          : _currentIndex == 1 && auth.loggedInUser!.accountType == "individual" ? "الملف الشخصي" : "طلب بحث عن شريك"  ,
+          title: AppManager.currentIndex == 0 ? "الرئيسية" 
+          : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "individual" ? "الملف الشخصي" : "طلب بحث عن شريك"  ,
         ),
       ),
       body: Padding(
         padding: EdgeInsets.all(15),
-        child: _pages.elementAt(_currentIndex),
+        child: _pages.elementAt(AppManager.currentIndex),
       ),
       bottomNavigationBar: Container(
             padding: EdgeInsets.all(5),
@@ -63,7 +61,7 @@ class _AppManagerState extends State<AppManager> {
               onTap: _switchIndex,
               showSelectedLabels: true,
               showUnselectedLabels: false,
-              currentIndex: _currentIndex,
+              currentIndex: AppManager.currentIndex,
               items: auth.loggedInUser!.accountType == "project" 
               ? <BottomNavigationBarItem>[
                 _bottomNavItem("./assets/icons/home.png", "●"),

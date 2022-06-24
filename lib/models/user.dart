@@ -1,4 +1,4 @@
-class User{
+class User {
   String id;
   String firstName;
   String lastName;
@@ -6,23 +6,21 @@ class User{
   String bio;
   String profileImage;
   String city;
-  int phoneNumber;
+  String phoneNumber;
   String accountType;
   List<dynamic> majors;
   dynamic createdAt;
 
-  User({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.bio,
-    required this.profileImage,
-    required this.city,
-    required this.phoneNumber,
-    required this.accountType,
-    required this.majors,
-    required this.createdAt
-  });
-  
+  User(
+      {required this.id,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.bio,
+      required this.profileImage,
+      required this.city,
+      required this.phoneNumber,
+      required this.accountType,
+      required this.majors,
+      required this.createdAt});
 }
