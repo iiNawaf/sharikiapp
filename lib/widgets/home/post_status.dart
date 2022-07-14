@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
 
-class PosterStatus extends StatelessWidget {
-  const PosterStatus({Key? key}) : super(key: key);
+class PostStatus extends StatelessWidget {
+  const PostStatus({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

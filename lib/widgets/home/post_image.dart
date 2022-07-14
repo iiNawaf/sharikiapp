@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
 
-class PosterImage extends StatelessWidget {
+class PostImage extends StatelessWidget {
   double height;
   double width;
-  PosterImage({required this.height, required this.width});
+  PostImage({required this.height, required this.width});
 
   @override
   Widget build(BuildContext context) {

@@ -4,23 +4,17 @@ import 'package:sharikiapp/styles.dart';
 import 'dart:io' show Platform;
 
 class InputDropDown extends StatefulWidget {
-  static String selectedValue = "";
+  static String selectedCity = "";
+  static String selectedMajor = "";
+  bool isCity;
   String title;
   List<String> list;
-  String val;
-  InputDropDown({required this.title, required this.list, required this.val});
+  InputDropDown({required this.title, required this.list, required this.isCity});
   @override
   State<InputDropDown> createState() => _InputDropDownState();
 }
 
 class _InputDropDownState extends State<InputDropDown> {
-
-  @override
-  void initState() {
-    InputDropDown.selectedValue = widget.val;
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Platform.isIOS
@@ -36,7 +30,7 @@ class _InputDropDownState extends State<InputDropDown> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      InputDropDown.selectedValue,
+                      widget.isCity == true ? InputDropDown.selectedCity : InputDropDown.selectedMajor,
                       style: TextStyle(
                           fontSize: 16,
                           color: inputTextColor),
@@ -60,13 +54,20 @@ class _InputDropDownState extends State<InputDropDown> {
                   children: [
                     Expanded(
                       child: DropdownButton(
-                        value: InputDropDown.selectedValue,
+                        value: widget.isCity == true ? InputDropDown.selectedCity : InputDropDown.selectedMajor,
                         iconSize: 0.0,
                         underline: Container(),
                         onChanged: (String? newValue) {
-                          setState(() {
-                            InputDropDown.selectedValue = newValue!;
+                          if(widget.isCity == true){
+                            setState(() {
+                            InputDropDown.selectedCity = newValue!;
                           });
+                          }else{
+                            setState(() {
+                            InputDropDown.selectedMajor = newValue!;
+                          });
+                          }
+                          
                         },
                         items: widget.list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
@@ -100,8 +101,15 @@ class _InputDropDownState extends State<InputDropDown> {
               child: CupertinoPicker(
                 children: widget.list.map((e) => Text(e)).toList(),
                 onSelectedItemChanged: (value) {
-                  InputDropDown.selectedValue = widget.list[value].toString();
-                  setState(() {});
+                  if(widget.isCity == true){
+                    setState(() {
+                      InputDropDown.selectedCity = widget.list[value].toString();
+                    });
+                  }else{
+                    setState(() {
+                      InputDropDown.selectedMajor = widget.list[value].toString();
+                    });
+                  }
                 },
                 itemExtent: 30,
                 diameterRatio: 1,
@@ -122,8 +130,15 @@ class _InputDropDownState extends State<InputDropDown> {
               child: CupertinoPicker(
                 children: widget.list.map((e) => Text(e)).toList(),
                 onSelectedItemChanged: (value) {
-                  InputDropDown.selectedValue = widget.list[value].toString();
-                  setState(() {});
+                  if(widget.isCity == true){
+                    setState(() {
+                      InputDropDown.selectedCity = widget.list[value].toString();
+                    });
+                  }else{
+                    setState(() {
+                      InputDropDown.selectedMajor = widget.list[value].toString();
+                    });
+                  }
                 },
                 itemExtent: 30,
                 diameterRatio: 1,

@@ -6,7 +6,6 @@ import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/appbar.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
-import 'package:sharikiapp/widgets/sign_up/account_type.dart';
 
 class SignUpScreen extends StatefulWidget {
   AccTypes accType;
@@ -109,6 +108,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ? "project" 
                   : ""
                 );
+                setState(() {
+                  isLoading = false;
+                });
                 if(result != ""){
                   ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(result)),
@@ -116,9 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 }else{
                   Navigator.popUntil(context, (route) => route.isFirst);
                 }
-                setState(() {
-                  isLoading = false;
-                });
+                
               })
             ],
           ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +10,6 @@ class AuthProvider with ChangeNotifier {
   User? _loggedInUser;
   User? get loggedInUser => _loggedInUser;
   String baseUrl = "http://10.0.2.2:3000/";
-  bool isDoneStoring = false;
 
   Future<dynamic> login(String email, String password) async {
     final url = Uri.parse(baseUrl + "api/auth/login");
@@ -25,7 +25,7 @@ class AuthProvider with ChangeNotifier {
     if (response.statusCode == 201) {
       try {
         _loggedInUser = User(
-            id: jsonResponse['user']['id'],
+            id: jsonResponse['user']['_id'],
             firstName: jsonResponse['user']['firstName'],
             lastName: jsonResponse['user']['lastName'],
             email: jsonResponse['user']['email'],
@@ -38,7 +38,7 @@ class AuthProvider with ChangeNotifier {
             createdAt: jsonResponse['user']['createdAt']);
 
         final loggedInUserInfo = jsonEncode({
-          'id': jsonResponse['user']['id'],
+          'id': jsonResponse['user']['_id'],
           'firstName': jsonResponse['user']['firstName'],
           'lastName': jsonResponse['user']['lastName'],
           'email': jsonResponse['user']['email'],
@@ -91,7 +91,7 @@ class AuthProvider with ChangeNotifier {
     if (response.statusCode == 201) {
       try {
         _loggedInUser = User(
-            id: jsonResponse['user']['id'],
+            id: jsonResponse['user']['_id'],
             firstName: jsonResponse['user']['firstName'],
             lastName: jsonResponse['user']['lastName'],
             email: jsonResponse['user']['email'],
@@ -104,7 +104,7 @@ class AuthProvider with ChangeNotifier {
             createdAt: jsonResponse['user']['createdAt']);
 
         final createdUserInfo = jsonEncode({
-          'id': jsonResponse['user']['id'],
+          'id': jsonResponse['user']['_id'],
           'firstName': jsonResponse['user']['firstName'],
           'lastName': jsonResponse['user']['lastName'],
           'email': jsonResponse['user']['email'],
@@ -116,7 +116,6 @@ class AuthProvider with ChangeNotifier {
           'majors': jsonResponse['user']['majors'],
           'createdAt': jsonResponse['user']['createdAt']
         });
-
 
         final storage = await SharedPreferences.getInstance();
         storage.setString("userInfo", createdUserInfo);
@@ -134,7 +133,9 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> updateUserProfileInfo(String firstName, String lastName,
       String bio, String phoneNumber, String city, List<dynamic> majors) async {
-    if (isUserInfoChanged(firstName, lastName, bio, phoneNumber, city, majors) == false) {
+    if (isUserInfoChanged(
+            firstName, lastName, bio, phoneNumber, city, majors) ==
+        false) {
       return "لم تجري أي تغييرات";
     }
     final url =
@@ -157,7 +158,7 @@ class AuthProvider with ChangeNotifier {
     if (response.statusCode == 201) {
       try {
         _loggedInUser = User(
-            id: jsonResponse['updatedUser']['id'],
+            id: jsonResponse['updatedUser']['_id'],
             firstName: jsonResponse['updatedUser']['firstName'],
             lastName: jsonResponse['updatedUser']['lastName'],
             email: jsonResponse['updatedUser']['email'],
@@ -170,7 +171,7 @@ class AuthProvider with ChangeNotifier {
             createdAt: jsonResponse['updatedUser']['createdAt']);
 
         final updatedUserInfo = jsonEncode({
-          'id': jsonResponse['updatedUser']['id'],
+          'id': jsonResponse['updatedUser']['_id'],
           'firstName': jsonResponse['updatedUser']['firstName'],
           'lastName': jsonResponse['updatedUser']['lastName'],
           'email': jsonResponse['updatedUser']['email'],
@@ -183,13 +184,12 @@ class AuthProvider with ChangeNotifier {
           'createdAt': jsonResponse['updatedUser']['createdAt']
         });
 
-
         final currentStorage = await SharedPreferences.getInstance();
         currentStorage.remove("userInfo");
 
         final newStorage = await SharedPreferences.getInstance();
         newStorage.setString("userInfo", updatedUserInfo);
-
+        notifyListeners();
         return jsonResponse['message'];
       } catch (e) {
         print("Error updating $e");
@@ -197,27 +197,6 @@ class AuthProvider with ChangeNotifier {
     } else {
       return jsonResponse['message'];
     }
-  }
-
-  Future<void> fetchUserInfo() async {
-    final storage = await SharedPreferences.getInstance();
-    if (storage.containsKey("userInfo")) {
-      final localUserInfo = jsonDecode("${storage.getString("userInfo")}");
-      _loggedInUser = User(
-        id: localUserInfo['id'],
-        firstName: localUserInfo['firstName'],
-        lastName: localUserInfo['lastName'],
-        email: localUserInfo['email'],
-        bio: localUserInfo['bio'],
-        profileImage: localUserInfo['profileImage'],
-        city: localUserInfo['city'],
-        phoneNumber: localUserInfo['phoneNumber'],
-        accountType: localUserInfo['accountType'],
-        majors: localUserInfo['majors'],
-        createdAt: localUserInfo['createdAt'],
-      );
-    }
-    // notifyListeners();
   }
 
   Future<dynamic> autoLogin() async {
@@ -253,16 +232,28 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool isUserInfoChanged(String enteredFirstName, String enteredLastName,
-      String enteredBio, String enteredPhoneNumber, String enteredCity, List<dynamic> enteredMajors) {
+  bool isUserInfoChanged(
+      String enteredFirstName,
+      String enteredLastName,
+      String enteredBio,
+      String enteredPhoneNumber,
+      String enteredCity,
+      List<dynamic> enteredMajors) {
     if (loggedInUser != null) {
       if (enteredFirstName == loggedInUser!.firstName &&
           enteredLastName == loggedInUser!.lastName &&
           enteredBio == loggedInUser!.bio &&
-          enteredPhoneNumber == loggedInUser!.phoneNumber && 
+          enteredPhoneNumber == loggedInUser!.phoneNumber &&
           enteredCity == loggedInUser!.city &&
-          enteredMajors == loggedInUser!.majors
-          ) {
+          (enteredMajors == loggedInUser!.majors ||
+              loggedInUser!.accountType == "project" &&
+                  enteredMajors[0] == loggedInUser!.majors[0])) {
+                    print("$enteredFirstName - ${loggedInUser!.firstName}");
+                    print("$enteredLastName - ${loggedInUser!.lastName}");
+                    print("$enteredBio - ${loggedInUser!.bio}");
+                    print("$enteredPhoneNumber - ${loggedInUser!.phoneNumber}");
+                    print("$enteredCity - ${loggedInUser!.city}");
+                    print("$enteredMajors - ${loggedInUser!.majors}");
         return false;
       } else {
         return true;

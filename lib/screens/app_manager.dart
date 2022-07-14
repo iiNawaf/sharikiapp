@@ -29,16 +29,18 @@ class _AppManagerState extends State<AppManager> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
-    if(auth.loggedInUser!.accountType == "individual"){
-      _pages[1] = MyProfileScreen();
-    }
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
         child: SharedAppBar(
           isAppManager: true,
-          title: AppManager.currentIndex == 0 ? "الرئيسية" 
-          : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "individual" ? "الملف الشخصي" : "طلب بحث عن شريك"  ,
+          title: AppManager.currentIndex == 0 
+          ? "الرئيسية" 
+          : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "individual" 
+          ? "عرض ملفك" 
+          : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "project"
+          ? "طلب البحث عن شريك" 
+          : "الملف الشخصي"
         ),
       ),
       body: Padding(
@@ -62,16 +64,12 @@ class _AppManagerState extends State<AppManager> {
               showSelectedLabels: true,
               showUnselectedLabels: false,
               currentIndex: AppManager.currentIndex,
-              items: auth.loggedInUser!.accountType == "project" 
-              ? <BottomNavigationBarItem>[
+              items: <BottomNavigationBarItem>[
                 _bottomNavItem("./assets/icons/home.png", "●"),
                 _bottomNavItem("./assets/icons/add.png", "●"),
                 _bottomNavItem("./assets/icons/user.png", "●")
-              ] : <BottomNavigationBarItem>[
-                _bottomNavItem("./assets/icons/home.png", "●"),
-                _bottomNavItem("./assets/icons/user.png", "●")
-              ],
-            ),
+              ]
+            )
           )
     );
   }

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
 
-class PosterCity extends StatelessWidget {
-  const PosterCity({Key? key}) : super(key: key);
-
+class PostCity extends StatelessWidget {
+  String city;
+  PostCity({required this.city});
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Image.asset('./assets/icons/location.png'),
         SizedBox(width: 2),
-        Text("الرياض",
+        Text(city,
             style: TextStyle(
                 fontSize: 12, fontWeight: FontWeight.bold, color: subTextColor)),
       ],

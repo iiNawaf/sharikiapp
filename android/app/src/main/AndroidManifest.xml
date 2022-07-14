@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.sharikiapp">
+    <uses-permission android:name="android.permission.INTERNET"/> <!-- added -->
    <application
         android:label="sharikiapp"
         android:icon="@mipmap/ic_launcher">

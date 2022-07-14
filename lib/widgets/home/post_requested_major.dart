@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
 
-class PosterMajor extends StatelessWidget {
-  const PosterMajor({Key? key}) : super(key: key);
-
+class PostRequestedMajor extends StatelessWidget {
+  String major;
+  PostRequestedMajor({required this.major});
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -12,7 +12,7 @@ class PosterMajor extends StatelessWidget {
         Image.asset('./assets/icons/asterisk.png'),
         SizedBox(width: 5),
         Text(
-          "مبرمج تطبيقات",
+          major,
           style: TextStyle(
               color: primaryColor, fontSize: 13, fontWeight: FontWeight.bold),
         )

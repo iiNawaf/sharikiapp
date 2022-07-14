@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/city.dart';
@@ -29,12 +28,14 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   @override
   void didChangeDependencies() {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    if (authProvider != null) {
-      _firstNameController.text = authProvider.loggedInUser!.firstName;
-      _lastNameController.text = authProvider.loggedInUser!.lastName;
-      _bioController.text = authProvider.loggedInUser!.bio;
-      _phoneController.text = authProvider.loggedInUser!.phoneNumber;
-      currentUserMajors = authProvider.loggedInUser!.majors;
+    _firstNameController.text = authProvider.loggedInUser!.firstName;
+    _lastNameController.text = authProvider.loggedInUser!.lastName;
+    _bioController.text = authProvider.loggedInUser!.bio;
+    _phoneController.text = authProvider.loggedInUser!.phoneNumber;
+    InputDropDown.selectedCity = authProvider.loggedInUser!.city;
+    currentUserMajors = authProvider.loggedInUser!.majors;
+    if (authProvider.loggedInUser!.accountType == "project") {
+      InputDropDown.selectedMajor = authProvider.loggedInUser!.majors[0];
     }
     super.didChangeDependencies();
   }
@@ -93,27 +94,34 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                   title:
                       "${auth.loggedInUser!.city == "" ? "اختر المدينة" : auth.loggedInUser!.city}",
                   list: city.cities.values.toList(),
-                  val: auth.loggedInUser!.city,
+                  isCity: true,
                 ),
                 SizedBox(height: 15),
                 auth.loggedInUser!.accountType == "individual"
                     ? _majorsLabel()
                     : Container(),
-                Container(
-                  decoration: BoxDecoration(
-                  color: whiteColor, borderRadius: BorderRadius.circular(10)),
-                  child: MultiSelectDialogField(
-                    items: major.majors.values
-                        .map((e) => MultiSelectItem(e, e))
-                        .toList(),
-                    listType: MultiSelectListType.CHIP,
-                    initialValue: currentUserMajors,
-                    decoration: BoxDecoration(border: Border.all(color: Colors.transparent)),
-                    onConfirm: (values) {
-                      currentUserMajors = values;
-                    },
-                  ),
-                ),
+                auth.loggedInUser!.accountType == "individual"
+                    ? Container(
+                        decoration: BoxDecoration(
+                            color: whiteColor,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: MultiSelectDialogField(
+                          items: major.userMajors.values
+                              .map((e) => MultiSelectItem(e, e))
+                              .toList(),
+                          listType: MultiSelectListType.CHIP,
+                          initialValue: currentUserMajors,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: Colors.transparent)),
+                          onConfirm: (values) => currentUserMajors = values,
+                        ),
+                      )
+                    : InputDropDown(
+                        title:
+                            "${currentUserMajors.isEmpty || currentUserMajors[0] == "" ? "اختر مجال المشروع" : currentUserMajors[0]}",
+                        list: major.projectMajors.values.toList(),
+                        isCity: false,
+                      ),
                 SizedBox(height: 20),
                 isLoading
                     ? ButtonLoading()
@@ -125,11 +133,15 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           });
                           final result = await auth.updateUserProfileInfo(
                             _firstNameController.text,
-                            _lastNameController.text,
+                            auth.loggedInUser!.accountType == "individual"
+                                ? _lastNameController.text
+                                : "",
                             _bioController.text,
                             _phoneController.text,
-                            InputDropDown.selectedValue,
-                            currentUserMajors,
+                            InputDropDown.selectedCity,
+                            auth.loggedInUser!.accountType == "individual" 
+                            ? currentUserMajors
+                            : [InputDropDown.selectedMajor],
                           );
                           setState(() {
                             isLoading = false;
