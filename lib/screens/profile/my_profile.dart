@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/city.dart';
-import 'package:sharikiapp/models/major.dart';
+import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
-import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/profile/change_profile_image_btn.dart';
 import 'package:sharikiapp/widgets/profile/profile_image.dart';
@@ -22,7 +20,6 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
   TextEditingController _lastNameController = TextEditingController();
   TextEditingController _bioController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
-  List<dynamic> currentUserMajors = [];
   bool isLoading = false;
 
   @override
@@ -33,15 +30,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     _bioController.text = authProvider.loggedInUser!.bio;
     _phoneController.text = authProvider.loggedInUser!.phoneNumber;
     InputDropDown.selectedCity = authProvider.loggedInUser!.city;
-    currentUserMajors = authProvider.loggedInUser!.majors;
-    if (authProvider.loggedInUser!.accountType == "project") {
-      InputDropDown.selectedMajor = authProvider.loggedInUser!.majors[0];
-    }
     super.didChangeDependencies();
   }
 
   City city = City();
-  Major major = Major();
 
   @override
   Widget build(BuildContext context) {
@@ -61,94 +53,103 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               child: InputTextField(
                                   title: "الاسم الاول",
                                   isObsecure: false,
+                                  inputType: TextInputType.text,
                                   controller: _firstNameController,
+                                  maxLength: 15,
                                   maxLines: 1)),
                           SizedBox(width: 10),
                           Expanded(
                               child: InputTextField(
                                   title: "الاسم الاخير",
                                   isObsecure: false,
+                                  inputType: TextInputType.text,
                                   controller: _lastNameController,
+                                  maxLength: 15,
                                   maxLines: 1)),
                         ],
                       )
                     : InputTextField(
                         title: "اسم المشروع",
                         isObsecure: false,
+                        inputType: TextInputType.text,
                         controller: _firstNameController,
+                        maxLength: 20,
                         maxLines: 1),
                 SizedBox(height: 15),
                 InputTextField(
                     title: "الوصف",
                     isObsecure: false,
+                    inputType: TextInputType.multiline,
                     controller: _bioController,
+                    maxLength: 250,
                     maxLines: 3),
                 SizedBox(height: 15),
                 InputTextField(
                     title: "رقم الجوال (يبدأ بـ05)",
                     isObsecure: false,
+                    inputType: TextInputType.number,
                     controller: _phoneController,
+                    maxLength: 10,
                     maxLines: 1),
                 SizedBox(height: 15),
                 InputDropDown(
                   title:
                       "${auth.loggedInUser!.city == "" ? "اختر المدينة" : auth.loggedInUser!.city}",
                   list: city.cities.values.toList(),
-                  isCity: true,
                 ),
-                SizedBox(height: 15),
-                auth.loggedInUser!.accountType == "individual"
-                    ? _majorsLabel()
-                    : Container(),
-                auth.loggedInUser!.accountType == "individual"
-                    ? Container(
-                        decoration: BoxDecoration(
-                            color: whiteColor,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: MultiSelectDialogField(
-                          items: major.userMajors.values
-                              .map((e) => MultiSelectItem(e, e))
-                              .toList(),
-                          listType: MultiSelectListType.CHIP,
-                          initialValue: currentUserMajors,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Colors.transparent)),
-                          onConfirm: (values) => currentUserMajors = values,
-                        ),
-                      )
-                    : InputDropDown(
-                        title:
-                            "${currentUserMajors.isEmpty || currentUserMajors[0] == "" ? "اختر مجال المشروع" : currentUserMajors[0]}",
-                        list: major.projectMajors.values.toList(),
-                        isCity: false,
-                      ),
                 SizedBox(height: 20),
                 isLoading
                     ? ButtonLoading()
                     : SubmitButton(
                         title: "حفظ",
                         submit: () async {
+                          print(_firstNameController.text);
                           setState(() {
                             isLoading = true;
                           });
-                          final result = await auth.updateUserProfileInfo(
-                            _firstNameController.text,
-                            auth.loggedInUser!.accountType == "individual"
-                                ? _lastNameController.text
-                                : "",
-                            _bioController.text,
-                            _phoneController.text,
-                            InputDropDown.selectedCity,
-                            auth.loggedInUser!.accountType == "individual" 
-                            ? currentUserMajors
-                            : [InputDropDown.selectedMajor],
-                          );
-                          setState(() {
-                            isLoading = false;
-                          });
+                          if (Validation.isEmpty(_firstNameController.text) ||
+                              (auth.loggedInUser!.accountType == "individual" &&
+                                  Validation.isEmpty(
+                                      _lastNameController.text)) ||
+                              Validation.isEmpty(_phoneController.text)) {
+                            Validation.bottomMsg(
+                                context, "الرجاء عدم ترك أي حقل فارغ");
+                            setState(() {
+                              isLoading = false;
+                            });
+                          } else if (!Validation.nameValidation(
+                                  _firstNameController.text) ||
+                              (auth.loggedInUser!.accountType == "individual" &&
+                                  !Validation.nameValidation(
+                                      _lastNameController.text))) {
+                            Validation.bottomMsg(context,
+                                "الرجاء كتابة الاسم كامل باللغة الانجليزية");
+                            setState(() {
+                              isLoading = false;
+                            });
+                          } else if (!Validation.phoneNumberValidation(
+                              _phoneController.text)) {
+                            Validation.bottomMsg(context,
+                                "رقم الجوال يجب أن يبدأ ب05 وأن يتكون من 10 أرقام");
+                            setState(() {
+                              isLoading = false;
+                            });
+                          } else {
+                            final result = await auth.updateUserProfileInfo(
+                              _firstNameController.text,
+                              auth.loggedInUser!.accountType == "individual"
+                                  ? _lastNameController.text
+                                  : "",
+                              _bioController.text,
+                              _phoneController.text,
+                              InputDropDown.selectedCity,
+                            );
+                            setState(() {
+                              isLoading = false;
+                            });
 
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(content: Text(result)));
+                            Validation.bottomMsg(context, result);
+                          }
                         })
               ],
             ),
@@ -156,18 +157,5 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         : Center(
             child: Text("Unauthorized Access."),
           );
-  }
-
-  Widget _majorsLabel() {
-    return Row(
-      children: [
-        Text(
-          "الخبرات (3 كحد أقصى)",
-          textAlign: TextAlign.start,
-          style: TextStyle(
-              color: textColor, fontWeight: FontWeight.bold, fontSize: 18),
-        ),
-      ],
-    );
   }
 }

@@ -29,7 +29,7 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
-        child: SharedAppBar(title: "", isAppManager: false),
+        child: SharedAppBar(title: ""),
       ),
       body: Padding(
         padding: const EdgeInsets.all(10),
@@ -39,36 +39,39 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
             _pageTitle(),
             SizedBox(height: 100),
             Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  AccountType(
-                      imgPath: "./assets/icons/individual.png",
-                      title: "فرد",
-                      borderColor: _accTypes == AccTypes.individual
-                          ? primaryColor
-                          : whiteColor,
-                      chooseAccount: () {
-                        setState(() {
-                          _accTypes = AccTypes.individual;
-                          description =
-                              "إنشاء حساب الفرد يسمح لك بالبحث عن فرص في احدى المشاريع الناشئة التي تبحث عن شريك.";
-                        });
-                      }),
-                  AccountType(
-                      imgPath: './assets/icons/start-up.png',
-                      title: "مشروع",
-                      borderColor: _accTypes == AccTypes.project
-                          ? primaryColor
-                          : whiteColor,
-                      chooseAccount: () {
-                        setState(() {
-                          _accTypes = AccTypes.project;
-                          description =
-                              "إنشاء حساب مشروع يسمح لك بالبحث عن شركاء مناسبين لبيئة مشروعك وحسب متطلبات مشروعك.";
-                        });
-                      }),
-                ],
-              ),
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AccountType(
+                    imgPath: "./assets/icons/individual.png",
+                    title: "فرد",
+                    borderColor: _accTypes == AccTypes.individual
+                        ? primaryColor
+                        : whiteColor,
+                    chooseAccount: () {
+                      setState(() {
+                        _accTypes = AccTypes.individual;
+                        description =
+                            "إنشاء حساب الفرد يسمح لك بالبحث عن فرص في احدى المشاريع الناشئة التي تبحث عن شريك.";
+                      });
+                    }),
+                SizedBox(
+                  width: 10,
+                ),
+                AccountType(
+                    imgPath: './assets/icons/start-up.png',
+                    title: "مشروع",
+                    borderColor: _accTypes == AccTypes.project
+                        ? primaryColor
+                        : whiteColor,
+                    chooseAccount: () {
+                      setState(() {
+                        _accTypes = AccTypes.project;
+                        description =
+                            "إنشاء حساب مشروع يسمح لك بالبحث عن شركاء مناسبين لبيئة مشروعك وحسب متطلبات مشروعك.";
+                      });
+                    }),
+              ],
+            ),
             SizedBox(height: 15),
             Text(
               description,

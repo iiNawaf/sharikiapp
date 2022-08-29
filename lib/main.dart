@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/app_manager.dart';
+import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/screens/login/login.dart';
 import 'package:sharikiapp/screens/splash/splash.dart';
 import 'package:sharikiapp/styles.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
                 future: authProvider.autoLogin(),
                 builder: (context, snapshot) {
                   return snapshot.connectionState == ConnectionState.done
-                      ? snapshot.hasData ? AppManager() : LoginScreen() 
+                      ? snapshot.hasData ? HomeScreen() : LoginScreen() 
                       : SplashScreen();
                 },
               ),

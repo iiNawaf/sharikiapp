@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,7 +8,7 @@ import 'package:http/http.dart' as http;
 class AuthProvider with ChangeNotifier {
   User? _loggedInUser;
   User? get loggedInUser => _loggedInUser;
-  String baseUrl = "http://10.0.2.2:3000/";
+  String baseUrl = "http://localhost:3000/";
 
   Future<dynamic> login(String email, String password) async {
     final url = Uri.parse(baseUrl + "api/auth/login");
@@ -34,7 +33,6 @@ class AuthProvider with ChangeNotifier {
             city: jsonResponse['user']['city'],
             phoneNumber: jsonResponse['user']['phoneNumber'],
             accountType: jsonResponse['user']['accountType'],
-            majors: jsonResponse['user']['majors'],
             createdAt: jsonResponse['user']['createdAt']);
 
         final loggedInUserInfo = jsonEncode({
@@ -47,7 +45,6 @@ class AuthProvider with ChangeNotifier {
           'city': jsonResponse['user']['city'],
           'phoneNumber': jsonResponse['user']['phoneNumber'],
           'accountType': jsonResponse['user']['accountType'],
-          'majors': jsonResponse['user']['majors'],
           'createdAt': jsonResponse['user']['createdAt']
         });
 
@@ -66,7 +63,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<dynamic> signUp(String firstName, String lastName, String email,
-      String phoneNumber, String password, String accountType) async {
+      String phoneNumber, String password, String accountType, String city) async {
     final url = Uri.parse(baseUrl + "api/auth/signup");
     final response = await http.post(
       url,
@@ -82,7 +79,7 @@ class AuthProvider with ChangeNotifier {
         'phoneNumber': phoneNumber,
         'password': password,
         'accountType': accountType,
-        'city': "",
+        'city': city,
       }),
     );
 
@@ -100,7 +97,6 @@ class AuthProvider with ChangeNotifier {
             city: jsonResponse['user']['city'],
             phoneNumber: jsonResponse['user']['phoneNumber'],
             accountType: jsonResponse['user']['accountType'],
-            majors: jsonResponse['user']['majors'],
             createdAt: jsonResponse['user']['createdAt']);
 
         final createdUserInfo = jsonEncode({
@@ -113,7 +109,6 @@ class AuthProvider with ChangeNotifier {
           'city': jsonResponse['user']['city'],
           'phoneNumber': jsonResponse['user']['phoneNumber'],
           'accountType': jsonResponse['user']['accountType'],
-          'majors': jsonResponse['user']['majors'],
           'createdAt': jsonResponse['user']['createdAt']
         });
 
@@ -132,9 +127,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<dynamic> updateUserProfileInfo(String firstName, String lastName,
-      String bio, String phoneNumber, String city, List<dynamic> majors) async {
-    if (isUserInfoChanged(
-            firstName, lastName, bio, phoneNumber, city, majors) ==
+      String bio, String phoneNumber, String city) async {
+    if (isUserInfoChanged(firstName, lastName, bio, phoneNumber, city) ==
         false) {
       return "لم تجري أي تغييرات";
     }
@@ -150,7 +144,6 @@ class AuthProvider with ChangeNotifier {
           'bio': bio,
           'phoneNumber': phoneNumber,
           'city': city,
-          'majors': majors
         }));
 
     final jsonResponse = jsonDecode(response.body);
@@ -167,7 +160,6 @@ class AuthProvider with ChangeNotifier {
             city: jsonResponse['updatedUser']['city'],
             phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
             accountType: jsonResponse['updatedUser']['accountType'],
-            majors: jsonResponse['updatedUser']['majors'],
             createdAt: jsonResponse['updatedUser']['createdAt']);
 
         final updatedUserInfo = jsonEncode({
@@ -180,7 +172,6 @@ class AuthProvider with ChangeNotifier {
           'city': jsonResponse['updatedUser']['city'],
           'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
           'accountType': jsonResponse['updatedUser']['accountType'],
-          'majors': jsonResponse['updatedUser']['majors'],
           'createdAt': jsonResponse['updatedUser']['createdAt']
         });
 
@@ -214,7 +205,6 @@ class AuthProvider with ChangeNotifier {
         city: localUserInfo['city'],
         phoneNumber: localUserInfo['phoneNumber'],
         accountType: localUserInfo['accountType'],
-        majors: localUserInfo['majors'],
         createdAt: localUserInfo['createdAt'],
       );
       print("logged in");
@@ -233,27 +223,18 @@ class AuthProvider with ChangeNotifier {
   }
 
   bool isUserInfoChanged(
-      String enteredFirstName,
-      String enteredLastName,
-      String enteredBio,
-      String enteredPhoneNumber,
-      String enteredCity,
-      List<dynamic> enteredMajors) {
+    String enteredFirstName,
+    String enteredLastName,
+    String enteredBio,
+    String enteredPhoneNumber,
+    String enteredCity,
+  ) {
     if (loggedInUser != null) {
       if (enteredFirstName == loggedInUser!.firstName &&
           enteredLastName == loggedInUser!.lastName &&
           enteredBio == loggedInUser!.bio &&
           enteredPhoneNumber == loggedInUser!.phoneNumber &&
-          enteredCity == loggedInUser!.city &&
-          (enteredMajors == loggedInUser!.majors ||
-              loggedInUser!.accountType == "project" &&
-                  enteredMajors[0] == loggedInUser!.majors[0])) {
-                    print("$enteredFirstName - ${loggedInUser!.firstName}");
-                    print("$enteredLastName - ${loggedInUser!.lastName}");
-                    print("$enteredBio - ${loggedInUser!.bio}");
-                    print("$enteredPhoneNumber - ${loggedInUser!.phoneNumber}");
-                    print("$enteredCity - ${loggedInUser!.city}");
-                    print("$enteredMajors - ${loggedInUser!.majors}");
+          enteredCity == loggedInUser!.city) {
         return false;
       } else {
         return true;

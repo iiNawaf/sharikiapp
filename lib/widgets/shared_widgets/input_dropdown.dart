@@ -5,16 +5,20 @@ import 'dart:io' show Platform;
 
 class InputDropDown extends StatefulWidget {
   static String selectedCity = "";
-  static String selectedMajor = "";
-  bool isCity;
   String title;
   List<String> list;
-  InputDropDown({required this.title, required this.list, required this.isCity});
+  InputDropDown({required this.title, required this.list});
   @override
   State<InputDropDown> createState() => _InputDropDownState();
 }
 
 class _InputDropDownState extends State<InputDropDown> {
+  @override
+  void dispose() {
+    widget.title = "";
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Platform.isIOS
@@ -30,10 +34,10 @@ class _InputDropDownState extends State<InputDropDown> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      widget.isCity == true ? InputDropDown.selectedCity : InputDropDown.selectedMajor,
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: inputTextColor),
+                      InputDropDown.selectedCity == ""
+                          ? widget.title
+                          : InputDropDown.selectedCity,
+                      style: TextStyle(fontSize: 16, color: inputTextColor),
                     ),
                     Image.asset('./assets/icons/down.png')
                   ],
@@ -54,30 +58,24 @@ class _InputDropDownState extends State<InputDropDown> {
                   children: [
                     Expanded(
                       child: DropdownButton(
-                        value: widget.isCity == true ? InputDropDown.selectedCity : InputDropDown.selectedMajor,
+                        value: InputDropDown.selectedCity,
                         iconSize: 0.0,
                         underline: Container(),
                         onChanged: (String? newValue) {
-                          if(widget.isCity == true){
-                            setState(() {
+                          setState(() {
                             InputDropDown.selectedCity = newValue!;
                           });
-                          }else{
-                            setState(() {
-                            InputDropDown.selectedMajor = newValue!;
-                          });
-                          }
-                          
                         },
-                        items: widget.list.map<DropdownMenuItem<String>>((String value) {
+                        items: widget.list
+                            .map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
                             child: Text(
                               value == "" ? widget.title : value,
                               style: TextStyle(
-                                  color: inputTextColor,
-                                  fontSize: 16,
-                                  ),
+                                color: inputTextColor,
+                                fontSize: 16,
+                              ),
                             ),
                           );
                         }).toList(),
@@ -101,15 +99,9 @@ class _InputDropDownState extends State<InputDropDown> {
               child: CupertinoPicker(
                 children: widget.list.map((e) => Text(e)).toList(),
                 onSelectedItemChanged: (value) {
-                  if(widget.isCity == true){
-                    setState(() {
-                      InputDropDown.selectedCity = widget.list[value].toString();
-                    });
-                  }else{
-                    setState(() {
-                      InputDropDown.selectedMajor = widget.list[value].toString();
-                    });
-                  }
+                  setState(() {
+                    InputDropDown.selectedCity = widget.list[value].toString();
+                  });
                 },
                 itemExtent: 30,
                 diameterRatio: 1,
@@ -130,15 +122,9 @@ class _InputDropDownState extends State<InputDropDown> {
               child: CupertinoPicker(
                 children: widget.list.map((e) => Text(e)).toList(),
                 onSelectedItemChanged: (value) {
-                  if(widget.isCity == true){
-                    setState(() {
-                      InputDropDown.selectedCity = widget.list[value].toString();
-                    });
-                  }else{
-                    setState(() {
-                      InputDropDown.selectedMajor = widget.list[value].toString();
-                    });
-                  }
+                  setState(() {
+                    InputDropDown.selectedCity = widget.list[value].toString();
+                  });
                 },
                 itemExtent: 30,
                 diameterRatio: 1,

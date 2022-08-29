@@ -8,7 +8,6 @@ class User {
   String city;
   String phoneNumber;
   String accountType;
-  List<dynamic> majors;
   dynamic createdAt;
 
   User(
@@ -21,6 +20,5 @@ class User {
       required this.city,
       required this.phoneNumber,
       required this.accountType,
-      required this.majors,
       required this.createdAt});
 }

@@ -30,19 +30,19 @@ class _AppManagerState extends State<AppManager> {
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(60),
-        child: SharedAppBar(
-          isAppManager: true,
-          title: AppManager.currentIndex == 0 
-          ? "الرئيسية" 
-          : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "individual" 
-          ? "عرض ملفك" 
-          : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "project"
-          ? "طلب البحث عن شريك" 
-          : "الملف الشخصي"
-        ),
-      ),
+      // appBar: PreferredSize(
+      //   preferredSize: Size.fromHeight(60),
+      //   child: SharedAppBar(
+      //     isAppManager: true,
+      //     title: AppManager.currentIndex == 0 
+      //     ? "الرئيسية" 
+      //     : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "individual" 
+      //     ? "عرض ملفك" 
+      //     : AppManager.currentIndex == 1 && auth.loggedInUser!.accountType == "project"
+      //     ? "طلب البحث عن شريك" 
+      //     : "الملف الشخصي"
+      //   ),
+      // ),
       body: Padding(
         padding: EdgeInsets.all(15),
         child: _pages.elementAt(AppManager.currentIndex),

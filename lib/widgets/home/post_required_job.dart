@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
 
-class PostRequestedMajor extends StatelessWidget {
+class PostRequiredJob extends StatelessWidget {
   String major;
-  PostRequestedMajor({required this.major});
+  PostRequiredJob({required this.major});
   @override
   Widget build(BuildContext context) {
     return Row(
