@@ -1,22 +1,29 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles.dart';
 
 class ProfileImage extends StatelessWidget {
-  String imgPath;
-  ProfileImage({required this.imgPath});
+  ImageProvider<Object> image;
+  ProfileImage({required this.image});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 130,
-      width: 130,
-      decoration: BoxDecoration(
-          color: whiteColor, borderRadius: BorderRadius.circular(100)),
-      child: Center(
-        child: imgPath == ""
-        ? Image.asset('./assets/icons/individual.png') 
-        : Text("Img"),
-      ),
-    );
+            width: 120.0,
+            height: 120.0,
+            decoration: BoxDecoration(
+              color: bgColor,
+              image: DecorationImage(
+                image: image,
+                fit: BoxFit.scaleDown,
+              ),
+              borderRadius: BorderRadius.all(Radius.circular(60.0)),
+              border: Border.all(
+                color: primaryColor,
+                width: 3.0,
+              ),
+            ),
+          );
   }
 }

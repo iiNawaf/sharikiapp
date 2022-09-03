@@ -21,4 +21,18 @@ class User {
       required this.phoneNumber,
       required this.accountType,
       required this.createdAt});
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        id: json['_id'],
+        firstName: json['firstName'],
+        lastName: json['lastName'],
+        email: json['email'],
+        bio: json['bio'],
+        profileImage: json['profileImage'],
+        city: json['city'],
+        phoneNumber: json['phoneNumber'],
+        accountType: json['accountType'],
+        createdAt: json['createdAt']);
+  }
 }

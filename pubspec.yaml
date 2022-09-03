@@ -35,6 +35,10 @@ dependencies:
   shared_preferences: ^2.0.15
   email_validator: '^2.1.16'
   timeago: ^3.3.0
+  image_picker: ^0.8.5+3
+  json_annotation: ^4.6.0
+  custom_refresh_indicator: ^1.2.1
+  url_launcher: ^6.1.5
 
 dev_dependencies:
   flutter_test:

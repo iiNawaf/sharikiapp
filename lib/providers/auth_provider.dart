@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:path/path.dart';
+import 'package:async/async.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +10,9 @@ import 'package:http/http.dart' as http;
 
 class AuthProvider with ChangeNotifier {
   User? _loggedInUser;
+  List<User>? _usersList = [];
   User? get loggedInUser => _loggedInUser;
+  List<User>? get usersList => _usersList;
   String baseUrl = "http://localhost:3000/";
 
   Future<dynamic> login(String email, String password) async {
@@ -62,8 +67,14 @@ class AuthProvider with ChangeNotifier {
     return "";
   }
 
-  Future<dynamic> signUp(String firstName, String lastName, String email,
-      String phoneNumber, String password, String accountType, String city) async {
+  Future<dynamic> signUp(
+      String firstName,
+      String lastName,
+      String email,
+      String phoneNumber,
+      String password,
+      String accountType,
+      String city) async {
     final url = Uri.parse(baseUrl + "api/auth/signup");
     final response = await http.post(
       url,
@@ -75,7 +86,7 @@ class AuthProvider with ChangeNotifier {
         'lastName': lastName,
         'email': email,
         'bio': "",
-        'profileImage': "",
+        // 'profileImage': "", default image already in server
         'phoneNumber': phoneNumber,
         'password': password,
         'accountType': accountType,
@@ -124,6 +135,78 @@ class AuthProvider with ChangeNotifier {
       return jsonResponse['message'];
     }
     return "";
+  }
+
+  Future upload(File imageFile) async {
+    // open a bytestream
+    var stream =
+        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+    // get file length
+    var length = await imageFile.length();
+    // string to uri
+    var uri =
+        Uri.parse(baseUrl + "api/auth/updateuserinfo/${_loggedInUser!.id}");
+    // create multipart request
+    var request = new http.MultipartRequest("PUT", uri);
+    // multipart that takes file
+    var multipartFile = new http.MultipartFile('profileImage', stream, length,
+        filename: basename(imageFile.path.split('.').last));
+    // add file to multipart
+    request.files.add(multipartFile);
+
+    // send
+    final response = await request.send();
+    final respStr = await response.stream.bytesToString();
+    final jsonResponse = await jsonDecode(respStr);
+    if (response.statusCode == 201) {
+      try {
+        _loggedInUser = User(
+            id: jsonResponse['updatedUser']['_id'],
+            firstName: jsonResponse['updatedUser']['firstName'],
+            lastName: jsonResponse['updatedUser']['lastName'],
+            email: jsonResponse['updatedUser']['email'],
+            bio: jsonResponse['updatedUser']['bio'],
+            profileImage: jsonResponse['updatedUser']['profileImage'],
+            city: jsonResponse['updatedUser']['city'],
+            phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
+            accountType: jsonResponse['updatedUser']['accountType'],
+            createdAt: jsonResponse['updatedUser']['createdAt']);
+
+        final updatedUserInfo = jsonEncode({
+          'id': jsonResponse['updatedUser']['_id'],
+          'firstName': jsonResponse['updatedUser']['firstName'],
+          'lastName': jsonResponse['updatedUser']['lastName'],
+          'email': jsonResponse['updatedUser']['email'],
+          'bio': jsonResponse['updatedUser']['bio'],
+          'profileImage': jsonResponse['updatedUser']['profileImage'],
+          'city': jsonResponse['updatedUser']['city'],
+          'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
+          'accountType': jsonResponse['updatedUser']['accountType'],
+          'createdAt': jsonResponse['updatedUser']['createdAt']
+        });
+
+        final currentStorage = await SharedPreferences.getInstance();
+        currentStorage.remove("userInfo");
+
+        final newStorage = await SharedPreferences.getInstance();
+        newStorage.setString("userInfo", updatedUserInfo);
+        notifyListeners();
+        return jsonResponse['message'];
+      } catch (e) {
+        print("Error updating $e");
+      }
+    }
+  }
+
+  Future<void> fetchUserInfo() async {
+    final url = Uri.parse(baseUrl + "api/auth/fetchuserlist");
+    final response = await http.get(url);
+    final jsonResponse =
+        jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
+    if (response.statusCode == 201) {
+      _usersList = jsonResponse.map<User>((json) => User.fromJson(json)).toList();
+      // notifyListeners();
+    }else{}
   }
 
   Future<dynamic> updateUserProfileInfo(String firstName, String lastName,

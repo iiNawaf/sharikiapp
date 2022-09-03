@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/city.dart';
@@ -85,13 +84,6 @@ class _AddNewRequestScreenState extends State<AddNewRequestScreen> {
                           setState(() {
                             isLoading = false;
                           });
-                        } else if (!Validation.nameValidation(
-                            _requiredJobController.text)) {
-                          Validation.bottomMsg(
-                              context,
-                              auth.loggedInUser!.accountType == "individual"
-                                  ? "الرجاء كتابة مجالك العملي بشكل صحيح"
-                                  : "الرجاء كتابة المجال العملي المطلوب بشكل صحيح");
                         } else {
                           showDialog(
                               // The user CANNOT close this dialog  by pressing outsite it

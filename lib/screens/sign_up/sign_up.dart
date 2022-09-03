@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/city.dart';
-import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/sign_up/choose_account_type.dart';
@@ -31,6 +30,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    InputDropDown.selectedCity = "";
     final auth = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
@@ -47,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   : widget.accType == AccTypes.project
                       ? "مشروع"
                       : ""),
-              SizedBox(height: 100),
+              SizedBox(height: 50),
               widget.accType == AccTypes.individual
                   ? Row(
                       children: [
@@ -98,7 +98,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   maxLength: 10,
                   maxLines: 1),
               SizedBox(height: 20),
-              InputDropDown(title: "المدينة", list: city.cities.values.toList()),
+              InputDropDown(
+                  title: "المدينة", list: city.cities.values.toList()),
+              SizedBox(height: 20),
               InputTextField(
                   title: "كلمة المرور",
                   isObsecure: true,
@@ -128,49 +130,71 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        if(Validation.isEmpty(_firstNameController.text) || (widget.accType == AccTypes.individual && Validation.isEmpty(_lastNameController.text)) || Validation.isEmpty(_emailController.text) || Validation.isEmpty(_phoneController.text) || Validation.isEmpty(_passwordController.text)){
-                          Validation.bottomMsg(context, "الرجاء عدم ترك أي حقل فارغ");
+                        if (Validation.isEmpty(_firstNameController.text) ||
+                            (widget.accType == AccTypes.individual &&
+                                Validation.isEmpty(_lastNameController.text)) ||
+                            Validation.isEmpty(_emailController.text) ||
+                            Validation.isEmpty(_phoneController.text) ||
+                            Validation.isEmpty(_passwordController.text)) {
+                          Validation.bottomMsg(
+                              context, "الرجاء عدم ترك أي حقل فارغ");
                           setState(() {
                             isLoading = false;
                           });
-                        }else if (!Validation.nameValidation(_firstNameController.text) || (widget.accType == AccTypes.individual && !Validation.nameValidation(_lastNameController.text))) {
-                          Validation.bottomMsg(context, "الرجاء كتابة الاسم كامل باللغة الانجليزية");
+                        } else if (!Validation.nameValidation(
+                                _firstNameController.text) ||
+                            (widget.accType == AccTypes.individual &&
+                                !Validation.nameValidation(
+                                    _lastNameController.text))) {
+                          Validation.bottomMsg(context,
+                              "الرجاء كتابة الاسم كامل باللغة الانجليزية");
                           setState(() {
                             isLoading = false;
                           });
-                        }else if(!Validation.emailValidation(_emailController.text)){
-                          Validation.bottomMsg(context, "الرجاء كتابة البريد الالكتروني بشكل صحيح");
+                        } else if (!Validation.emailValidation(
+                            _emailController.text)) {
+                          Validation.bottomMsg(context,
+                              "الرجاء كتابة البريد الالكتروني بشكل صحيح");
                           setState(() {
                             isLoading = false;
                           });
-                        }else if(!Validation.phoneNumberValidation(_phoneController.text)){
-                          Validation.bottomMsg(context, "رقم الجوال يجب أن يبدأ ب05 وأن يتكون من 10 أرقام");
+                        } else if (!Validation.phoneNumberValidation(
+                            _phoneController.text)) {
+                          Validation.bottomMsg(context,
+                              "رقم الجوال يجب أن يبدأ ب05 وأن يتكون من 10 أرقام");
                           setState(() {
                             isLoading = false;
                           });
-                        }else{
-                          final result = await auth.signUp(
-                            _firstNameController.text,
-                            widget.accType == AccTypes.individual
-                                ? _lastNameController.text
-                                : "",
-                            _emailController.text,
-                            _phoneController.text,
-                            _passwordController.text,
-                            widget.accType == AccTypes.individual
-                                ? "individual"
-                                : widget.accType == AccTypes.project
-                                    ? "project"
-                                    : "",
-                                    InputDropDown.selectedCity);
-                        setState(() {
-                          isLoading = false;
-                        });
-                        if (result != "") {
-                          Validation.bottomMsg(context, result);
+                        } else if (InputDropDown.selectedCity == "") {
+                          Validation.bottomMsg(
+                              context, "الرجاء اختيار المدينة");
+                          setState(() {
+                            isLoading = false;
+                          });
                         } else {
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                        }
+                          final result = await auth.signUp(
+                              _firstNameController.text,
+                              widget.accType == AccTypes.individual
+                                  ? _lastNameController.text
+                                  : "",
+                              _emailController.text,
+                              _phoneController.text,
+                              _passwordController.text,
+                              widget.accType == AccTypes.individual
+                                  ? "individual"
+                                  : widget.accType == AccTypes.project
+                                      ? "project"
+                                      : "",
+                              InputDropDown.selectedCity);
+                          setState(() {
+                            isLoading = false;
+                          });
+                          if (result != "") {
+                            Validation.bottomMsg(context, result);
+                          } else {
+                            Navigator.popUntil(
+                                context, (route) => route.isFirst);
+                          }
                         }
                       })
             ],

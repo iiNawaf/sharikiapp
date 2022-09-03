@@ -7,14 +7,7 @@ class FetchingDataLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(color: primaryColor),
-          Text("Fetching Data...")
-        ],
-      ),
+      child: CircularProgressIndicator(color: primaryColor),
     );
   }
 }

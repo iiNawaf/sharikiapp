@@ -42,7 +42,6 @@ class PostProvider with ChangeNotifier {
     final response = await http.get(url);
     final jsonResponse =
         jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();
-    print("asd");
     if (response.statusCode == 201) {
       _posts = jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
       notifyListeners();

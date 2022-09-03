@@ -6,7 +6,6 @@ class Validation {
   //Regex
   static final RegExp nameRegex = RegExp('^[a-zA-Z]');
   static final RegExp phoneNumberRegex = RegExp('^05[0-9]');
-    static final RegExp majorRegex = RegExp('^[a-zA-Z][أ-ي]');
 
 
   //functions
@@ -18,14 +17,7 @@ class Validation {
   }
 
   static bool nameValidation(String text) {
-    if (nameRegex.hasMatch(text)) {
-      return true;
-    }
-    return false;
-  }
-
-  static bool majorValidation(String text) {
-    if (majorRegex.hasMatch(text)) {
+    if (nameRegex.hasMatch(text) || text.length > 20) {
       return true;
     }
     return false;
@@ -39,7 +31,7 @@ class Validation {
   }
 
   static bool phoneNumberValidation(String text) {
-    if (phoneNumberRegex.hasMatch(text) && text.length == 10) {
+    if (phoneNumberRegex.hasMatch(text) || text.length != 10) {
       return true;
     }
     return false;
