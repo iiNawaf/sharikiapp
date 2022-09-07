@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
-import 'package:sharikiapp/screens/app_manager.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/screens/login/login.dart';
 import 'package:sharikiapp/screens/splash/splash.dart';

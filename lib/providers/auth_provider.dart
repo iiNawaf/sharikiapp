@@ -204,9 +204,10 @@ class AuthProvider with ChangeNotifier {
     final jsonResponse =
         jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
     if (response.statusCode == 201) {
-      _usersList = jsonResponse.map<User>((json) => User.fromJson(json)).toList();
+      _usersList =
+          jsonResponse.map<User>((json) => User.fromJson(json)).toList();
       // notifyListeners();
-    }else{}
+    } else {}
   }
 
   Future<dynamic> updateUserProfileInfo(String firstName, String lastName,
@@ -270,6 +271,25 @@ class AuthProvider with ChangeNotifier {
       }
     } else {
       return jsonResponse['message'];
+    }
+  }
+
+  Future<dynamic> forgotPassword(String email) async {
+    final url = Uri.parse(baseUrl + "api/auth/forgotpassword");
+    final response = await http.post(url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{'email': email}));
+
+    final jsonResponse = jsonDecode(response.body);
+
+    if (response.statusCode == 201) {
+      return jsonResponse['message'];
+    } else if (response.statusCode == 400) {
+      return jsonResponse['message'];
+    } else {
+      return "Error";
     }
   }
 

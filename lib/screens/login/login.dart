@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
+import 'package:sharikiapp/screens/login/forgot_password.dart';
 import 'package:sharikiapp/screens/sign_up/choose_account_type.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
@@ -60,12 +61,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 maxLength: 500,
                 maxLines: 1),
             SizedBox(height: 5),
-            Text(
-              "نسيت كلمة المرور",
-              style: TextStyle(
-                  fontSize: 16,
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold),
+            GestureDetector(
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword())),
+              child: Text(
+                "نسيت كلمة المرور",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: primaryColor,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
             SizedBox(height: 35),
             isLoading
