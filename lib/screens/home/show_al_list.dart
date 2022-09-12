@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/models/post.dart';
 import 'package:sharikiapp/models/time.dart';
+import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
@@ -13,7 +14,8 @@ import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
 
 class ShowAllList extends StatelessWidget {
   List<Post> posts;
-  ShowAllList({required this.posts});
+  List<String> images;
+  ShowAllList({required this.posts, required this.images});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +54,9 @@ class ShowAllList extends StatelessWidget {
                             posts[index].description,
                             posts[index].city,
                             posts[index].requiredJob,
-                            posts[index].publisherPhoneNumber),
+                            posts[index].publisherPhoneNumber,
+                            images[index],
+                            posts[index].postType),
                       );
                     },
                     child: Container(
@@ -70,7 +74,7 @@ class ShowAllList extends StatelessWidget {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  PostImage(height: 60, width: 60),
+                                  PostImage(height: 60, width: 60, img: images[index]),
                                   SizedBox(width: 5),
                                   Container(
                                     height: 55,

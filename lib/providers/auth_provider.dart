@@ -206,7 +206,7 @@ class AuthProvider with ChangeNotifier {
     if (response.statusCode == 201) {
       _usersList = jsonResponse.map<User>((json) => User.fromJson(json)).toList();
       // notifyListeners();
-    } else {}
+    }
   }
 
   Future<dynamic> updateUserProfileInfo(String firstName, String lastName,

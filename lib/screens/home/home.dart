@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/time.dart';
+import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/show_al_list.dart';
@@ -16,11 +17,8 @@ import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_status.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
-import 'package:sharikiapp/widgets/posts_widgets/user_card.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 import 'dart:async';
-
-import 'package:sharikiapp/widgets/shared_widgets/shared_alert_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -110,7 +108,7 @@ void initState() {
             ),
             SliverToBoxAdapter(
               child: Container(
-                height: 210,
+                height: 215,
                 child: PageView.builder(
                   controller: _pageController,
                   scrollDirection: Axis.horizontal,
@@ -129,7 +127,7 @@ void initState() {
                   children: [
                     Text("أحدث الاعلانات", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
                     post.posts.length > 10 ? GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowAllList(posts: post.posts))),
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowAllList(posts: post.posts, images: User.userImage(auth, post)))),
                       child: Text("المزيد", style: TextStyle(color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold))) : Container(),
                   ],
                 )
@@ -147,8 +145,7 @@ void initState() {
                   DateTime date = DateTime.parse(post.posts[index].time).toUtc();
                   int timestamp = date.toLocal().millisecondsSinceEpoch;
                   var newDate = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-                  return post.posts[index].postStatus != "active" 
-                  ? Container() : Container(
+                  return Container(
                     padding: EdgeInsets.all(10),
                       child: GestureDetector(
                         onTap: () {
@@ -167,6 +164,8 @@ void initState() {
                             post.posts[index].city,
                             post.posts[index].requiredJob,
                             post.posts[index].publisherPhoneNumber,
+                            User.userImage(auth, post)[index],
+                            post.posts[index].postType
                           ),
                         );
                         
@@ -174,7 +173,11 @@ void initState() {
                         child: Container(
                           decoration: BoxDecoration(
                             color: whiteColor,
-                            borderRadius: BorderRadius.circular(15)
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              width: 2,
+                              color: post.posts[index].postType == "individual" ? individualColor : primaryColor 
+                            )
                           ),
                           padding: EdgeInsets.all(15),
                             child: Column(
@@ -187,7 +190,7 @@ void initState() {
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        PostImage(height: 60, width: 60),
+                                        PostImage(height: 60, width: 60, img: User.userImage(auth, post)[index],),
                                         SizedBox(width: 5),
                                         Container(
                                           height: 55,
@@ -198,7 +201,7 @@ void initState() {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               PostTitle(
-                                                  title: post.posts[index].title),
+                                                  title: "${post.posts[index].title}"),
                                               PostCity(city: post.posts[index].city)
                                             ],
                                           ),
@@ -237,13 +240,13 @@ void initState() {
 }
 
   Widget postInfo(
-      String title, String description, String city, String requiredJob, String phoneNumber) {
+      String title, String description, String city, String requiredJob, String phoneNumber, String image, String accountType) {
     return Wrap(
       children: [
         Column(
           children: [
             SizedBox(height: 15),
-            PostImage(height: 130, width: 130),
+            PostImage(height: 130, width: 130, img: image,),
             SizedBox(height: 20),
             Container(height: 1, color: bgColor),
             Padding(
@@ -280,7 +283,7 @@ void initState() {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("المجال العملي",
+                  Text(accountType == "individual" ? "المجال العملي" : "المجال العملي المطلوب",
                       style: TextStyle(
                           color: textColor, fontWeight: FontWeight.bold)),
                   PostTitle(title: requiredJob)

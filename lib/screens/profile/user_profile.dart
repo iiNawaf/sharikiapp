@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/models/user.dart';
+import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/styles.dart';
@@ -20,6 +21,7 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthProvider>(context, listen: false);
     final post = Provider.of<PostProvider>(context, listen: false);
     return Scaffold(
         appBar: PreferredSize(
@@ -111,7 +113,9 @@ class UserProfile extends StatelessWidget {
                                     post.posts[index].description,
                                     post.posts[index].city,
                                     post.posts[index].requiredJob,
-                                    post.posts[index].publisherPhoneNumber
+                                    post.posts[index].publisherPhoneNumber,
+                                    User.userImage(auth, post)[index],
+                                    post.posts[index].postType
                                   ),
                                 ),
                                 child: Container(
@@ -127,7 +131,7 @@ class UserProfile extends StatelessWidget {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          PostImage(height: 60, width: 60),
+                                          PostImage(height: 60, width: 60, img: User.userImage(auth, post)[index],),
                                           SizedBox(width: 5),
                                           Container(
                                             height: 55,

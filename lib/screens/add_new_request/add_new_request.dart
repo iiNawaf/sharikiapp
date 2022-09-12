@@ -71,13 +71,6 @@ class _AddNewRequestScreenState extends State<AddNewRequestScreen> {
                       maxLength: 20,
                       maxLines: 1),
               SizedBox(height: 20),
-              auth.loggedInUser!.accountType == "project"
-                  ? InputDropDown(
-                      list: ['', 'يوجد', 'لا يوجد'],
-                      title: "الراتب",
-                    )
-                  : Container(),
-              SizedBox(height: 20),
               InputTextField(
                   title: "الوصف",
                   isObsecure: false,
@@ -128,6 +121,7 @@ class _AddNewRequestScreenState extends State<AddNewRequestScreen> {
                           });
                           Navigator.pop(context);
                           _showSuccessDialog(context);
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         }
                       })
             ],

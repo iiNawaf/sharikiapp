@@ -4,7 +4,8 @@ import 'package:sharikiapp/styles.dart';
 class PostImage extends StatelessWidget {
   double height;
   double width;
-  PostImage({required this.height, required this.width});
+  String img;
+  PostImage({required this.height, required this.width, required this.img});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,11 @@ class PostImage extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-          color: primaryColor, borderRadius: BorderRadius.circular(10)),
+        image: DecorationImage(
+          fit: BoxFit.fill,
+          image: NetworkImage(img)
+        ),
+          color: bgColor, borderRadius: BorderRadius.circular(10)),
     );
   }
 }

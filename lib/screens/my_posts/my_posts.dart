@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/time.dart';
+import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/home.dart';
@@ -20,25 +21,6 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
-  late SwipeActionController controller;
-
-  @override
-  void initState() {
-    super.initState();
-    controller = SwipeActionController(selectedIndexPathsChangeCallback:
-        (changedIndexPaths, selected, currentCount) {
-      print(
-          'cell at ${changedIndexPaths.toString()} is/are ${selected ? 'selected' : 'unselected'} ,current selected count is $currentCount');
-
-      ///I just call setState() to update simply in this example.
-      ///But the whole page will be rebuilt.
-      ///So when you are developing,you'd better update a little piece
-      ///of UI sub tree for best performance....
-
-      setState(() {});
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final post = Provider.of<PostProvider>(context);
@@ -73,7 +55,10 @@ class _MyPostsState extends State<MyPosts> {
                                 post.posts[index].description,
                                 post.posts[index].city,
                                 post.posts[index].requiredJob,
-                                post.posts[index].publisherPhoneNumber),
+                                post.posts[index].publisherPhoneNumber,
+                                User.userImage(auth, post)[index],
+                                post.posts[index].postType
+                                ),
                           ),
                           child: Container(
                             decoration: BoxDecoration(
@@ -92,7 +77,7 @@ class _MyPostsState extends State<MyPosts> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        PostImage(height: 60, width: 60),
+                                        PostImage(height: 60, width: 60, img: User.userImage(auth, post)[index],),
                                         SizedBox(width: 5),
                                         Container(
                                           height: 55,

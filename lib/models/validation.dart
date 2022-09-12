@@ -35,7 +35,7 @@ class Validation {
     }
     return false;
   }
-
+  
   //Error messages
   static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> bottomMsg(
       BuildContext context, String message) {
