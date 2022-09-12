@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sharikiapp/models/user.dart';
-import 'package:sharikiapp/models/validation.dart';
-import 'package:sharikiapp/screens/profile/user_profile.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/widgets/shared_widgets/shared_alert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactBtn extends StatelessWidget {
@@ -31,7 +28,7 @@ class ContactBtn extends StatelessWidget {
             await launch(url);
           } else {
             // Navigator.pop(context);
-            Validation.bottomMsg(context, "الرجاء تحميل WhatsApp");
+            showDialog(context: context, builder: (context) => SharedAlertDialog(title: "حصل خطأ", content: "الرجاء تحميل واتساب", btnTitle: "حسنا", btnTitle2: "", click: () => Navigator.pop(context), click2: (){}));
           }
         } else if (isPhoneCall) {
           await launch("tel://$phoneNumber");
