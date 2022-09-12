@@ -6,6 +6,7 @@ class Post {
   String city;
   String description;
   String requiredJob;
+  String postStatus;
   String postType;
   dynamic time;
 
@@ -17,6 +18,7 @@ class Post {
       required this.city,
       required this.description,
       required this.requiredJob,
+      required this.postStatus,
       required this.postType,
       required this.time});
 
@@ -29,6 +31,7 @@ class Post {
         city: json['city'],
         description: json['description'],
         requiredJob: json['requiredJob'],
+        postStatus: json['postStatus'],
         postType: json['postType'],
         time: json['time']);
   }

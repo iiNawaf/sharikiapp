@@ -5,18 +5,22 @@ import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/show_al_list.dart';
 import 'package:sharikiapp/styles.dart';
-import 'package:sharikiapp/widgets/appbar.dart';
+import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/drawer.dart';
 import 'package:sharikiapp/widgets/home/contact_btn.dart';
-import 'package:sharikiapp/widgets/home/home_option.dart';
-import 'package:sharikiapp/widgets/home/post_city.dart';
-import 'package:sharikiapp/widgets/home/post_description.dart';
-import 'package:sharikiapp/widgets/home/post_image.dart';
-import 'package:sharikiapp/widgets/home/post_required_job.dart';
-import 'package:sharikiapp/widgets/home/post_title.dart';
-import 'package:sharikiapp/widgets/home/post_time.dart';
-import 'package:sharikiapp/widgets/home/user_card.dart';
+import 'package:sharikiapp/widgets/home/profile_preview.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_description.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_status.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
+import 'package:sharikiapp/widgets/posts_widgets/user_card.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
+import 'dart:async';
+
+import 'package:sharikiapp/widgets/shared_widgets/shared_alert_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   static final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -45,6 +49,33 @@ class _HomeScreenState extends State<HomeScreen> {
     super.didChangeDependencies();
   }
 
+  int _currentPage = 0;
+late Timer _timer;
+PageController _pageController = PageController(
+  initialPage: 0,
+);
+@override
+void initState() {
+  super.initState();
+  _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+    if (_currentPage < 2) {
+      _currentPage++;
+    } else {
+      _currentPage = 0;
+    }
+    _pageController.animateToPage(
+      _currentPage,
+      duration: Duration(milliseconds: 350),
+      curve: Curves.easeIn,
+    );
+  });
+}
+  @override
+  void dispose() {
+    super.dispose();
+    _timer.cancel();
+  }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -71,57 +102,24 @@ class _HomeScreenState extends State<HomeScreen> {
         : CustomScrollView(
           slivers: <Widget>[
             HomeAppBar(title: "الرئيسية"),
-            //individual results
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: Text("تصفح الأفراد", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Text("تصفح الأفراد والمشاريع", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
             SliverToBoxAdapter(
               child: Container(
-                height: 200,
-                child: ListView.builder(
-                  itemCount: auth.usersList!.length > 10 ? 10 : auth.usersList!.length,
+                height: 210,
+                child: PageView.builder(
+                  controller: _pageController,
                   scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemBuilder: ((context, index){
-                    if(auth.loggedInUser!.id != auth.usersList![index].id){
-                      return auth.usersList![index].accountType == "individual" 
-                    ? UserCard(user: auth.usersList![index]) : Container();
-                    }else{
-                      return Container();
-                    }
-                  }
-                  ),
+                  itemCount: auth.usersList!.length,
+                  itemBuilder: (context, index){
+                    return ProfilePreview(user: auth.usersList![index]);
+                  },
                 ),
-              )
-            ),
-            //project results
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 10),
-                child: Text("تصفح المشاريع", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
               ),
-            ),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 200,
-                child: ListView.builder(
-                  itemCount: auth.usersList!.length > 10 ? 10 : auth.usersList!.length,
-                  scrollDirection: Axis.horizontal,
-                  shrinkWrap: true,
-                  itemBuilder: ((context, index){
-                    if(auth.loggedInUser!.id != auth.usersList![index].id){
-                      return auth.usersList![index].accountType == "project" 
-                    ? UserCard(user: auth.usersList![index]) : Container();
-                    }else{
-                      return Container();
-                    }
-                  }
-                  ),
-                ),
-              )
             ),
             SliverToBoxAdapter(
               child: Padding(
@@ -130,9 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text("أحدث الاعلانات", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
-                    GestureDetector(
+                    post.posts.length > 10 ? GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowAllList(posts: post.posts))),
-                      child: Text("المزيد", style: TextStyle(color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold))),
+                      child: Text("المزيد", style: TextStyle(color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold))) : Container(),
                   ],
                 )
               ),
@@ -141,18 +139,23 @@ class _HomeScreenState extends State<HomeScreen> {
             ? SliverToBoxAdapter(child: Center(child: Text("لا توجد نتائج"),),)
             : SliverToBoxAdapter(
               child: ListView.builder(
+                padding: EdgeInsets.all(0),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: post.posts.length > 10 ? 10 : post.posts.length,
-                reverse: true,
                 itemBuilder: (context, index){
                   DateTime date = DateTime.parse(post.posts[index].time).toUtc();
                   int timestamp = date.toLocal().millisecondsSinceEpoch;
                   var newDate = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-                  return Container(
+                  return post.posts[index].postStatus != "active" 
+                  ? Container() : Container(
                     padding: EdgeInsets.all(10),
                       child: GestureDetector(
-                        onTap: () => showModalBottomSheet(
+                        onTap: () {
+                          if(post.posts[index].postStatus != "active"){
+                            return;
+                          }
+                          showModalBottomSheet(
                           context: context,
                           backgroundColor: whiteColor,
                           isScrollControlled: true,
@@ -165,7 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             post.posts[index].requiredJob,
                             post.posts[index].publisherPhoneNumber,
                           ),
-                        ),
+                        );
+                        
+                        },
                         child: Container(
                           decoration: BoxDecoration(
                             color: whiteColor,
@@ -177,23 +182,30 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    PostImage(height: 60, width: 60),
-                                    SizedBox(width: 5),
-                                    Container(
-                                      height: 55,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          PostTitle(
-                                              title: post.posts[index].title),
-                                          PostCity(city: post.posts[index].city)
-                                        ],
-                                      ),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        PostImage(height: 60, width: 60),
+                                        SizedBox(width: 5),
+                                        Container(
+                                          height: 55,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              PostTitle(
+                                                  title: post.posts[index].title),
+                                              PostCity(city: post.posts[index].city)
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
+                                    PostStatus(status: post.posts[index].postStatus)
                                   ],
                                 ),
                                                               

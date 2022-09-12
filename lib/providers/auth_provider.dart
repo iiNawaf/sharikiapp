@@ -204,8 +204,7 @@ class AuthProvider with ChangeNotifier {
     final jsonResponse =
         jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
     if (response.statusCode == 201) {
-      _usersList =
-          jsonResponse.map<User>((json) => User.fromJson(json)).toList();
+      _usersList = jsonResponse.map<User>((json) => User.fromJson(json)).toList();
       // notifyListeners();
     } else {}
   }
@@ -284,12 +283,16 @@ class AuthProvider with ChangeNotifier {
 
     final jsonResponse = jsonDecode(response.body);
 
-    if (response.statusCode == 201) {
-      return jsonResponse['message'];
-    } else if (response.statusCode == 400) {
-      return jsonResponse['message'];
-    } else {
-      return "Error";
+    try {
+      if (response.statusCode == 201) {
+        return "";
+      } else if (response.statusCode == 400) {
+        return jsonResponse['message'];
+      } else if (response.statusCode == 401) {
+        return jsonResponse['message'];
+      }
+    } catch (e) {
+      return "حصل خطأ";
     }
   }
 

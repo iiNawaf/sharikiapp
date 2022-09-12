@@ -7,3 +7,4 @@ const textColor = Color(0xff797979);
 const subTextColor = Color(0xffAFAFAF);
 const inputTextColor = Color(0xffAFAFAF);
 const dangerColor = Color(0xffCC0E0E);
+const activeColor = Color(0xff31b482);

@@ -7,7 +7,6 @@ class Validation {
   static final RegExp nameRegex = RegExp('^[a-zA-Z]');
   static final RegExp phoneNumberRegex = RegExp('^05[0-9]');
 
-
   //functions
   static bool isEmpty(String text) {
     if (text.isEmpty) {

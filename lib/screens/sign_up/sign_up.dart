@@ -5,7 +5,7 @@ import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/sign_up/choose_account_type.dart';
 import 'package:sharikiapp/styles.dart';
-import 'package:sharikiapp/widgets/appbar.dart';
+import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_dropdown.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
@@ -29,8 +29,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
   City city = City();
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
     InputDropDown.selectedCity = "";
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: PreferredSize(

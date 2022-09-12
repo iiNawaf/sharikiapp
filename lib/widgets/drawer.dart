@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/add_new_request/add_new_request.dart';
-import 'package:sharikiapp/screens/my_requests/my_requests.dart';
+import 'package:sharikiapp/screens/my_posts/my_posts.dart';
 import 'package:sharikiapp/screens/profile/my_profile.dart';
 import 'package:sharikiapp/styles.dart';
 
@@ -61,7 +61,7 @@ class HomeDrawer extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => MyRequests()));
+                      builder: (context) => MyPosts()));
             },
           ),
           ListTile(

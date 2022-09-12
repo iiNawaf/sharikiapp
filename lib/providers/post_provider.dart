@@ -9,8 +9,14 @@ class PostProvider with ChangeNotifier {
   List<Post> get posts => _posts;
   String baseUrl = "http://localhost:3000/";
 
-  Future<dynamic> addNewPost(String publisherID, String publisherPhoneNumber,
-      String title, String city, String requiredJob, String description, String postType) async {
+  Future<dynamic> addNewPost(
+      String publisherID,
+      String publisherPhoneNumber,
+      String title,
+      String city,
+      String requiredJob,
+      String description,
+      String postType) async {
     final url = Uri.parse(baseUrl + "api/posts/addnewpost");
     final response = await http.post(url,
         headers: <String, String>{
@@ -23,6 +29,7 @@ class PostProvider with ChangeNotifier {
           'city': city,
           'requiredJob': requiredJob,
           'description': description,
+          'postStatus': "active",
           'postType': postType,
         }));
 

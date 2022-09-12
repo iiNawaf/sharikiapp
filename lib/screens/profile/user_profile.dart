@@ -5,13 +5,13 @@ import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/styles.dart';
-import 'package:sharikiapp/widgets/appbar.dart';
+import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/home/contact_btn.dart';
-import 'package:sharikiapp/widgets/home/post_city.dart';
-import 'package:sharikiapp/widgets/home/post_image.dart';
-import 'package:sharikiapp/widgets/home/post_required_job.dart';
-import 'package:sharikiapp/widgets/home/post_time.dart';
-import 'package:sharikiapp/widgets/home/post_title.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
+import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
 import 'package:sharikiapp/widgets/profile/profile_image.dart';
 
 class UserProfile extends StatelessWidget {
@@ -88,7 +88,6 @@ class UserProfile extends StatelessWidget {
                     )),
                 ListView.builder(
                     shrinkWrap: true,
-                    reverse: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: post.posts.length,
                     itemBuilder: (ctx, index) {

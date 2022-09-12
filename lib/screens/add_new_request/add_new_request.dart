@@ -4,10 +4,11 @@ import 'package:sharikiapp/models/city.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
-import 'package:sharikiapp/widgets/appbar.dart';
+import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_dropdown.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
+import 'package:sharikiapp/widgets/shared_widgets/shared_alert_dialog.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 
 class AddNewRequestScreen extends StatefulWidget {
@@ -20,6 +21,21 @@ class _AddNewRequestScreenState extends State<AddNewRequestScreen> {
   TextEditingController _descriptionController = TextEditingController();
   City city = City();
   bool isLoading = false;
+
+  // bool hasActiveRequest(AuthProvider ap, PostProvider pp) {
+  //   bool result = false;
+  //   for (int i = 0; i < pp.posts.length; i++) {
+  //     if (ap.loggedInUser!.id == pp.posts[i].publisherID) {
+  //       if (pp.posts[i].postStatus == "active") {
+  //         result = true;
+  //       } else {
+  //         result = false;
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }
+
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthProvider>(context);
@@ -127,23 +143,13 @@ Future<void> _showSuccessDialog(BuildContext context) async {
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text('تم ارسال طلبك'),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: const <Widget>[
-              Text('تم ارسال طلبك بنجاح'),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('حسنا'),
-            onPressed: () {
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            },
-          ),
-        ],
+      return SharedAlertDialog(
+        title: 'تم ارسال طلبك',
+        content: 'تم ارسال طلبك بنجاح',
+        btnTitle: 'حسنا',
+        btnTitle2: "",
+        click: () => Navigator.pop(context),
+        click2: (){},
       );
     },
   );
