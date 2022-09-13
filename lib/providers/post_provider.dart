@@ -3,21 +3,24 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/models/post.dart';
 import 'package:http/http.dart' as http;
+import 'package:sharikiapp/providers/connection_provider.dart';
 
 class PostProvider with ChangeNotifier {
+  ConnectionProvider connectionProvider;
+  PostProvider({required this.connectionProvider});
   List<Post> _posts = [];
   List<Post> get posts => _posts;
-  String baseUrl = "http://localhost:3000/";
 
   Future<dynamic> addNewPost(
       String publisherID,
       String publisherPhoneNumber,
+      String publisherProfileImage,
       String title,
       String city,
       String requiredJob,
       String description,
       String postType) async {
-    final url = Uri.parse(baseUrl + "api/posts/addnewpost");
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/addnewpost");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -45,7 +48,7 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<void> fetchPosts() async {
-    final url = Uri.parse(baseUrl + "api/posts/fetchposts");
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/fetchposts");
     final response = await http.get(url);
     final jsonResponse =
         jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();

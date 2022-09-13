@@ -56,7 +56,7 @@ class _MyPostsState extends State<MyPosts> {
                                 post.posts[index].city,
                                 post.posts[index].requiredJob,
                                 post.posts[index].publisherPhoneNumber,
-                                User.userImage(auth, post)[index],
+                                post.posts[index].publisherProfileImage,
                                 post.posts[index].postType
                                 ),
                           ),
@@ -77,7 +77,7 @@ class _MyPostsState extends State<MyPosts> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        PostImage(height: 60, width: 60, img: User.userImage(auth, post)[index],),
+                                        PostImage(height: 60, width: 60, img: post.posts[index].publisherProfileImage,),
                                         SizedBox(width: 5),
                                         Container(
                                           height: 55,

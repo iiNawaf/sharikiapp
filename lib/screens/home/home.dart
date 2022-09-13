@@ -127,7 +127,7 @@ void initState() {
                   children: [
                     Text("أحدث الاعلانات", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
                     post.posts.length > 10 ? GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowAllList(posts: post.posts, images: User.userImage(auth, post)))),
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowAllList(posts: post.posts))),
                       child: Text("المزيد", style: TextStyle(color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold))) : Container(),
                   ],
                 )
@@ -164,7 +164,7 @@ void initState() {
                             post.posts[index].city,
                             post.posts[index].requiredJob,
                             post.posts[index].publisherPhoneNumber,
-                            User.userImage(auth, post)[index],
+                            post.posts[index].publisherProfileImage,
                             post.posts[index].postType
                           ),
                         );
@@ -190,7 +190,7 @@ void initState() {
                                     Row(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        PostImage(height: 60, width: 60, img: User.userImage(auth, post)[index],),
+                                        PostImage(height: 60, width: 60, img: post.posts[index].publisherProfileImage,),
                                         SizedBox(width: 5),
                                         Container(
                                           height: 55,

@@ -2,6 +2,7 @@ class Post {
   String id;
   String publisherID;
   String publisherPhoneNumber;
+  String publisherProfileImage;
   String title;
   String city;
   String description;
@@ -14,6 +15,7 @@ class Post {
       {required this.id,
       required this.publisherID,
       required this.publisherPhoneNumber,
+      required this.publisherProfileImage,
       required this.title,
       required this.city,
       required this.description,
@@ -27,6 +29,7 @@ class Post {
         id: json['_id'],
         publisherID: json['publisherID'],
         publisherPhoneNumber: json['publisherPhoneNumber'],
+        publisherProfileImage: json['publisherProfileImage'],
         title: json['title'],
         city: json['city'],
         description: json['description'],

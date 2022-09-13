@@ -39,16 +39,4 @@ class User {
         accountType: json['accountType'],
         createdAt: json['createdAt']);
   }
-
-  static List<String> userImage(AuthProvider ap, PostProvider pp){
-    List<String> imgsUrl = [];
-    for(int i = 0; i < ap.usersList!.length; i++){
-      for(int j = 0; j < pp.posts.length; j++){
-        if(ap.usersList![i].id == pp.posts[j].publisherID){
-          imgsUrl.add(ap.usersList![j].profileImage);
-        }
-      }
-    }
-    return imgsUrl;
-  }
 }

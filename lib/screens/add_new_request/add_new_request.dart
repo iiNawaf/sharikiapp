@@ -104,6 +104,7 @@ class _AddNewRequestScreenState extends State<AddNewRequestScreen> {
                           final result = await postProvider.addNewPost(
                               auth.loggedInUser!.id,
                               auth.loggedInUser!.phoneNumber,
+                              auth.loggedInUser!.profileImage,
                               auth.loggedInUser!.accountType == "individual"
                                   ? auth.loggedInUser!.firstName +
                                       " " +

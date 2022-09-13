@@ -14,8 +14,7 @@ import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
 
 class ShowAllList extends StatelessWidget {
   List<Post> posts;
-  List<String> images;
-  ShowAllList({required this.posts, required this.images});
+  ShowAllList({required this.posts});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +54,7 @@ class ShowAllList extends StatelessWidget {
                             posts[index].city,
                             posts[index].requiredJob,
                             posts[index].publisherPhoneNumber,
-                            images[index],
+                            posts[index].publisherProfileImage,
                             posts[index].postType),
                       );
                     },
@@ -74,7 +73,7 @@ class ShowAllList extends StatelessWidget {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  PostImage(height: 60, width: 60, img: images[index]),
+                                  PostImage(height: 60, width: 60, img: posts[index].publisherProfileImage),
                                   SizedBox(width: 5),
                                   Container(
                                     height: 55,

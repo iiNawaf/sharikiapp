@@ -7,16 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharikiapp/models/user.dart';
 import 'package:http/http.dart' as http;
+import 'package:sharikiapp/providers/connection_provider.dart';
 
 class AuthProvider with ChangeNotifier {
+  ConnectionProvider connectionProvider;
+  AuthProvider({required this.connectionProvider});
   User? _loggedInUser;
   List<User>? _usersList = [];
   User? get loggedInUser => _loggedInUser;
   List<User>? get usersList => _usersList;
-  String baseUrl = "http://localhost:3000/";
 
   Future<dynamic> login(String email, String password) async {
-    final url = Uri.parse(baseUrl + "api/auth/login");
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/login");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -75,7 +77,7 @@ class AuthProvider with ChangeNotifier {
       String password,
       String accountType,
       String city) async {
-    final url = Uri.parse(baseUrl + "api/auth/signup");
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/signup");
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -145,7 +147,7 @@ class AuthProvider with ChangeNotifier {
     var length = await imageFile.length();
     // string to uri
     var uri =
-        Uri.parse(baseUrl + "api/auth/updateuserinfo/${_loggedInUser!.id}");
+        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/updateuserinfo/${_loggedInUser!.id}");
     // create multipart request
     var request = new http.MultipartRequest("PUT", uri);
     // multipart that takes file
@@ -199,12 +201,13 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> fetchUserInfo() async {
-    final url = Uri.parse(baseUrl + "api/auth/fetchuserlist");
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/fetchuserlist");
     final response = await http.get(url);
     final jsonResponse =
         jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
     if (response.statusCode == 201) {
-      _usersList = jsonResponse.map<User>((json) => User.fromJson(json)).toList();
+      _usersList =
+          jsonResponse.map<User>((json) => User.fromJson(json)).toList();
       // notifyListeners();
     }
   }
@@ -216,7 +219,7 @@ class AuthProvider with ChangeNotifier {
       return "لم تجري أي تغييرات";
     }
     final url =
-        Uri.parse(baseUrl + "api/auth/updateuserinfo/${_loggedInUser!.id}");
+        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/updateuserinfo/${_loggedInUser!.id}");
     final response = await http.put(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -274,7 +277,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<dynamic> forgotPassword(String email) async {
-    final url = Uri.parse(baseUrl + "api/auth/forgotpassword");
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/forgotpassword");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',

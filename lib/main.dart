@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:sharikiapp/models/connect.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
+import 'package:sharikiapp/providers/connection_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/screens/login/login.dart';
 import 'package:sharikiapp/screens/splash/splash.dart';
 import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 
 void main() {
   runApp(MyApp());
@@ -17,11 +20,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => PostProvider())
+        ChangeNotifierProvider(create: (context) => ConnectionProvider()),
+        ChangeNotifierProvider(create: (context) => AuthProvider(connectionProvider: ConnectionProvider())),
+        ChangeNotifierProvider(create: (context) => PostProvider(connectionProvider: ConnectionProvider())),
       ],
-      child: Consumer<AuthProvider>(
-        builder: (context, authProvider, _) {
+      child: Consumer2<AuthProvider, ConnectionProvider>(
+        builder: (context, authProvider, connectionProvider, _) {
           return GestureDetector(
             onTap: () {
               FocusScopeNode currentFocus = FocusScope.of(context);
@@ -46,13 +50,18 @@ class MyApp extends StatelessWidget {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
               ),
-              home: FutureBuilder(
-                future: authProvider.autoLogin(),
+              home: FutureBuilder<bool>(
+                future: connectionProvider.checkConnectivity(),
                 builder: (context, snapshot) {
-                  return snapshot.connectionState == ConnectionState.done
-                      ? snapshot.hasData ? HomeScreen() : LoginScreen() 
-                      : SplashScreen();
-                },
+                  return snapshot.data == true ? FutureBuilder(
+                    future: authProvider.autoLogin(),
+                    builder: (context, snapshot) {
+                      return snapshot.connectionState == ConnectionState.done
+                          ? snapshot.hasData ? HomeScreen() : LoginScreen() 
+                          : SplashScreen();
+                    },
+                  ) : Scaffold(body: FetchingDataLoading());
+                }
               ),
             ),
           );
