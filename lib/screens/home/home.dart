@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       final postProvider = Provider.of<PostProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      postProvider.fetchPosts();
+      postProvider.fetchPosts(authProvider.loggedInUser!.accountType);
       authProvider.fetchUserInfo();
       setState(() {
         isLoading = false;
@@ -87,7 +87,7 @@ void initState() {
           isLoading = true;
         });
         await auth.fetchUserInfo();
-        await post.fetchPosts();
+        await post.fetchPosts(auth.loggedInUser!.accountType);
         setState(() {
           isLoading = false;
         });
@@ -103,7 +103,7 @@ void initState() {
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.only(right: 10),
-                child: Text("تصفح الأفراد والمشاريع", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
+                child: Text(auth.loggedInUser!.accountType == 'individual' ? "تصفح المشاريع" : "تصفح الأفراد", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
             SliverToBoxAdapter(
@@ -125,7 +125,7 @@ void initState() {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("أحدث الاعلانات", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
+                    Text(auth.loggedInUser!.accountType == 'individual' ? "أحدث اعلانات المشاريع" : "أحدث اعلانات الأفراد", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
                     post.posts.length > 10 ? GestureDetector(
                       onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ShowAllList(posts: post.posts))),
                       child: Text("المزيد", style: TextStyle(color: primaryColor, fontSize: 16, fontWeight: FontWeight.bold))) : Container(),

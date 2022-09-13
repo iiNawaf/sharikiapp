@@ -28,6 +28,7 @@ class PostProvider with ChangeNotifier {
         body: jsonEncode(<String, dynamic>{
           'publisherID': publisherID,
           'publisherPhoneNumber': publisherPhoneNumber,
+          'publisherProfileImage': publisherProfileImage,
           'title': title,
           'city': city,
           'requiredJob': requiredJob,
@@ -39,7 +40,7 @@ class PostProvider with ChangeNotifier {
     final jsonResponse = jsonDecode(response.body);
 
     if (response.statusCode == 201) {
-      fetchPosts();
+      fetchPosts(postType);
       notifyListeners();
       return jsonResponse['message'];
     } else {
@@ -47,8 +48,8 @@ class PostProvider with ChangeNotifier {
     }
   }
 
-  Future<void> fetchPosts() async {
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/fetchposts");
+  Future<void> fetchPosts(String accountType) async {
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/fetchposts/$accountType");
     final response = await http.get(url);
     final jsonResponse =
         jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();

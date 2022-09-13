@@ -201,7 +201,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> fetchUserInfo() async {
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/fetchuserlist");
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/fetchuserlist/${_loggedInUser!.accountType}");
     final response = await http.get(url);
     final jsonResponse =
         jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
