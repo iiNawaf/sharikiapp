@@ -39,8 +39,8 @@ dependencies:
   json_annotation: ^4.6.0
   custom_refresh_indicator: ^1.2.1
   url_launcher: ^6.1.5
-  drop_shadow_image: ^0.9.0
-  flutter_swipe_action_cell: ^3.0.4
+  flutter_launcher_icons: ^0.10.0
+
 
 dev_dependencies:
   flutter_test:

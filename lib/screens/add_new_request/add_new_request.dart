@@ -6,7 +6,6 @@ import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
-import 'package:sharikiapp/widgets/shared_widgets/input_dropdown.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/shared_alert_dialog.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';

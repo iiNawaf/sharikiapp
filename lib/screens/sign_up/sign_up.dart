@@ -12,6 +12,7 @@ import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 
 class SignUpScreen extends StatefulWidget {
+  static GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey<ScaffoldMessengerState>();
   AccTypes accType;
   SignUpScreen({required this.accType});
 

@@ -106,7 +106,9 @@ void initState() {
                 child: Text(auth.loggedInUser!.accountType == 'individual' ? "تصفح المشاريع" : "تصفح الأفراد", style: TextStyle(color: textColor, fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ),
-            SliverToBoxAdapter(
+            auth.usersList!.length == 0
+              ? SliverToBoxAdapter(child: Center(child: Text("لا توجد نتائج"),),)
+              : SliverToBoxAdapter(
               child: Container(
                 height: 215,
                 child: PageView.builder(
@@ -114,7 +116,9 @@ void initState() {
                   scrollDirection: Axis.horizontal,
                   itemCount: auth.usersList!.length,
                   itemBuilder: (context, index){
-                    return ProfilePreview(user: auth.usersList![index]);
+                    return auth.isLoading 
+                    ? Container(height: 100, decoration: BoxDecoration(color: whiteColor, borderRadius: BorderRadius.circular(10)),)
+                    : ProfilePreview(user: auth.usersList![index]);
                   },
                 ),
               ),
@@ -145,7 +149,9 @@ void initState() {
                   DateTime date = DateTime.parse(post.posts[index].time).toUtc();
                   int timestamp = date.toLocal().millisecondsSinceEpoch;
                   var newDate = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-                  return Container(
+                  return post.isLoading 
+                  ? Container(height: 100, decoration: BoxDecoration(color: whiteColor, borderRadius: BorderRadius.circular(10)),)
+                  : Container(
                     padding: EdgeInsets.all(10),
                       child: GestureDetector(
                         onTap: () {
@@ -168,16 +174,11 @@ void initState() {
                             post.posts[index].postType
                           ),
                         );
-                        
                         },
                         child: Container(
                           decoration: BoxDecoration(
                             color: whiteColor,
                             borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              width: 2,
-                              color: post.posts[index].postType == "individual" ? individualColor : primaryColor 
-                            )
                           ),
                           padding: EdgeInsets.all(15),
                             child: Column(

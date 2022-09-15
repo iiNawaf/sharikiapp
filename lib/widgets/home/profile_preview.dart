@@ -18,11 +18,7 @@ class ProfilePreview extends StatelessWidget {
             width: 100,
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: whiteColor,
-                border: Border.all(
-                              width: 2,
-                              color: user.accountType == "individual" ? individualColor : primaryColor 
-                            )),
+                borderRadius: BorderRadius.circular(10), color: whiteColor),
             child: Column(
               children: [
                 CircleAvatar(

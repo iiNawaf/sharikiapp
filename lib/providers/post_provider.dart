@@ -10,6 +10,7 @@ class PostProvider with ChangeNotifier {
   PostProvider({required this.connectionProvider});
   List<Post> _posts = [];
   List<Post> get posts => _posts;
+  bool isLoading = false;
 
   Future<dynamic> addNewPost(
       String publisherID,
@@ -49,6 +50,7 @@ class PostProvider with ChangeNotifier {
   }
 
   Future<void> fetchPosts(String accountType) async {
+    isLoading = true;
     final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/fetchposts/$accountType");
     final response = await http.get(url);
     final jsonResponse =
@@ -57,7 +59,9 @@ class PostProvider with ChangeNotifier {
       _posts = jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
       notifyListeners();
     } else {
+      isLoading = false;
       return jsonResponse['message'];
     }
+    isLoading = false;
   }
 }

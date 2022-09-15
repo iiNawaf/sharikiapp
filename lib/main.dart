@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:sharikiapp/models/connect.dart';
+import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/connection_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
                 highlightColor: Colors.transparent,
               ),
               home: FutureBuilder<bool>(
-                future: connectionProvider.checkConnectivity(),
+                future: connectionProvider.checkConnectivity(context),
                 builder: (context, snapshot) {
                   return snapshot.data == true ? FutureBuilder(
                     future: authProvider.autoLogin(),
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
                           ? snapshot.hasData ? HomeScreen() : LoginScreen() 
                           : SplashScreen();
                     },
-                  ) : Scaffold(body: FetchingDataLoading());
+                  ) : FetchingDataLoading();
                 }
               ),
             ),

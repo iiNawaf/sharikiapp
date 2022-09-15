@@ -16,6 +16,7 @@ class AuthProvider with ChangeNotifier {
   List<User>? _usersList = [];
   User? get loggedInUser => _loggedInUser;
   List<User>? get usersList => _usersList;
+  bool isLoading = false;
 
   Future<dynamic> login(String email, String password) async {
     final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/login");
@@ -128,7 +129,6 @@ class AuthProvider with ChangeNotifier {
         final storage = await SharedPreferences.getInstance();
         storage.setString("userInfo", createdUserInfo);
         notifyListeners();
-
         return "";
       } catch (e) {
         print("Error occurred $e");
@@ -201,15 +201,15 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> fetchUserInfo() async {
+    isLoading = true;
     final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/fetchuserlist/${_loggedInUser!.accountType}");
     final response = await http.get(url);
     final jsonResponse =
         jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
     if (response.statusCode == 201) {
-      _usersList =
-          jsonResponse.map<User>((json) => User.fromJson(json)).toList();
-      // notifyListeners();
+      _usersList = jsonResponse.map<User>((json) => User.fromJson(json)).toList();
     }
+    isLoading = false;
   }
 
   Future<dynamic> updateUserProfileInfo(String firstName, String lastName,
