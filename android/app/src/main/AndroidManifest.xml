@@ -2,7 +2,7 @@
     package="com.example.sharikiapp">
     <uses-permission android:name="android.permission.INTERNET"/> <!-- added -->
    <application
-        android:label="sharikiapp"
+        android:label="Shariki"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
