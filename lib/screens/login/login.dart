@@ -33,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.asset('./assets/images/shariki_logo.png'),
+                Image.asset('./assets/images/shariki_logo_nobg.png'),
               ],
             ),
             SizedBox(height: 100),
