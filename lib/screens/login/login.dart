@@ -109,9 +109,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.bold))),
               ],
             ),
-            TextButton(
-                onPressed: () async => auth.autoLogin(),
-                child: Text("Check Info"))
           ],
         ),
       ),

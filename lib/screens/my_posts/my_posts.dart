@@ -5,6 +5,7 @@ import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';
@@ -19,27 +20,48 @@ class MyPosts extends StatefulWidget {
 }
 
 class _MyPostsState extends State<MyPosts> {
+  bool isLoading = false;
+  bool isInit = true;
+  @override
+  void didChangeDependencies() async{
+    if(isInit){
+      setState(() {
+        isLoading = true;
+      });
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final postProvider = Provider.of<PostProvider>(context, listen: false);
+      postProvider.fetchMyPosts(authProvider.loggedInUser!.id);
+      setState(() {
+        isLoading = false;
+      });
+    }else{
+      setState(() {
+        isLoading = false;
+      });
+    }
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     final post = Provider.of<PostProvider>(context);
-    final auth = Provider.of<AuthProvider>(context);
     return Scaffold(
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(60),
           child: SharedAppBar(
-            title: "طلباتي",
+            title: "اعلاناتي",
           )),
-      body: SingleChildScrollView(
+      body: isLoading 
+      ? FetchingDataLoading() 
+      : SingleChildScrollView(
         child: ListView.builder(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          itemCount: post.posts.length,
+          itemCount: post.myPosts.length,
           itemBuilder: (ctx, index) {
-            DateTime date = DateTime.parse(post.posts[index].time).toUtc();
+            DateTime date = DateTime.parse(post.myPosts[index].time).toUtc();
             int timestamp = date.toLocal().millisecondsSinceEpoch;
             var newDate = DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
-            return auth.loggedInUser!.id == post.posts[index].publisherID
-                ? Container(
+            return Container(
                         padding: EdgeInsets.all(10),
                         child: GestureDetector(
                           onTap: () => showModalBottomSheet(
@@ -49,13 +71,13 @@ class _MyPostsState extends State<MyPosts> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                             builder: (context) => postInfo(
-                                post.posts[index].title,
-                                post.posts[index].description,
-                                post.posts[index].city,
-                                post.posts[index].requiredJob,
-                                post.posts[index].publisherPhoneNumber,
-                                post.posts[index].publisherProfileImage,
-                                post.posts[index].postType
+                                post.myPosts[index].title,
+                                post.myPosts[index].description,
+                                post.myPosts[index].city,
+                                post.myPosts[index].requiredJob,
+                                post.myPosts[index].publisherPhoneNumber,
+                                post.myPosts[index].publisherProfileImage,
+                                post.myPosts[index].postType
                                 ),
                           ),
                           child: Container(
@@ -75,7 +97,7 @@ class _MyPostsState extends State<MyPosts> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        PostImage(height: 60, width: 60, img: post.posts[index].publisherProfileImage,),
+                                        PostImage(height: 60, width: 60, img: post.myPosts[index].publisherProfileImage,),
                                         SizedBox(width: 5),
                                         Container(
                                           height: 55,
@@ -87,16 +109,16 @@ class _MyPostsState extends State<MyPosts> {
                                             children: [
                                               PostTitle(
                                                   title:
-                                                      post.posts[index].title),
+                                                      post.myPosts[index].title),
                                               PostCity(
-                                                  city: post.posts[index].city)
+                                                  city: post.myPosts[index].city)
                                             ],
                                           ),
                                         ),
                                       ],
                                     ),
                                     PostStatus(
-                                        status: post.posts[index].postStatus)
+                                        status: post.myPosts[index].postStatus)
                                   ],
                                 ),
                                 SizedBox(height: 20),
@@ -105,7 +127,7 @@ class _MyPostsState extends State<MyPosts> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     PostRequiredJob(
-                                        major: post.posts[index].requiredJob),
+                                        major: post.myPosts[index].requiredJob),
                                     PostTime(
                                       time: Time.displayTimeAgoFromTimestamp(
                                           newDate.toString()),
@@ -115,8 +137,7 @@ class _MyPostsState extends State<MyPosts> {
                               ],
                             ),
                           ),
-                        ))
-                : Container();
+                        ));
           },
         ),
       ),

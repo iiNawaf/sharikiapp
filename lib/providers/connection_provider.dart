@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:sharikiapp/models/connect.dart';
-import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 

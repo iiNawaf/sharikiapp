@@ -9,7 +9,9 @@ class PostProvider with ChangeNotifier {
   ConnectionProvider connectionProvider;
   PostProvider({required this.connectionProvider});
   List<Post> _posts = [];
+  List<Post> _myPosts = [];
   List<Post> get posts => _posts;
+  List<Post> get myPosts => _myPosts;
   bool isLoading = false;
 
   Future<dynamic> addNewPost(
@@ -57,6 +59,22 @@ class PostProvider with ChangeNotifier {
         jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();
     if (response.statusCode == 201) {
       _posts = jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
+      notifyListeners();
+    } else {
+      isLoading = false;
+      return jsonResponse['message'];
+    }
+    isLoading = false;
+  }
+
+  Future<void> fetchMyPosts(String id) async{
+    isLoading = true;
+    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/fetchposts/myposts/$id");
+    final response = await http.get(url);
+    final jsonResponse =
+        jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();
+    if (response.statusCode == 201) {
+      _myPosts = jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
       notifyListeners();
     } else {
       isLoading = false;
