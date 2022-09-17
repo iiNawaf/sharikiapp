@@ -100,7 +100,7 @@ class UserProfile extends StatelessWidget {
                           DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
                       return user.id == post.posts[index].publisherID
                           ? Container(
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(0),
                               child: GestureDetector(
                                 onTap: () => showModalBottomSheet(
                                   context: context,
