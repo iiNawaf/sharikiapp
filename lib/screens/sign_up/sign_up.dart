@@ -10,9 +10,9 @@ import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_dropdown.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
+import 'package:sharikiapp/widgets/sign_up/terms_conditions.dart';
 
 class SignUpScreen extends StatefulWidget {
-  static GlobalKey<ScaffoldMessengerState> scaffoldKey = GlobalKey<ScaffoldMessengerState>();
   AccTypes accType;
   SignUpScreen({required this.accType});
 
@@ -121,10 +121,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     "بضغطك على تسجيل فأنت توافق على ",
                     style: TextStyle(color: textColor),
                   ),
-                  Text(
-                    "الشروط والأحكام",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: primaryColor),
+                  GestureDetector(
+                    onTap: () => showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return TermsAndConditions();
+                        }),
+                    child: Text(
+                      "الشروط والأحكام",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: primaryColor),
+                    ),
                   )
                 ],
               ),
