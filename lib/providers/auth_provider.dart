@@ -19,7 +19,8 @@ class AuthProvider with ChangeNotifier {
   bool isLoading = false;
 
   Future<dynamic> login(String email, String password) async {
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/login");
+    final url =
+        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/login");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -58,7 +59,9 @@ class AuthProvider with ChangeNotifier {
 
         final storage = await SharedPreferences.getInstance();
         await storage.setString("userInfo", loggedInUserInfo);
+        await storage.setString("token", jsonResponse['token']);
         notifyListeners();
+        print(jsonResponse['token']);
 
         return "";
       } catch (e) {
@@ -78,7 +81,8 @@ class AuthProvider with ChangeNotifier {
       String password,
       String accountType,
       String city) async {
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/signup");
+    final url =
+        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/signup");
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -98,6 +102,7 @@ class AuthProvider with ChangeNotifier {
     );
 
     final jsonResponse = jsonDecode(response.body);
+    print(jsonResponse);
 
     if (response.statusCode == 201) {
       try {
@@ -128,6 +133,7 @@ class AuthProvider with ChangeNotifier {
 
         final storage = await SharedPreferences.getInstance();
         storage.setString("userInfo", createdUserInfo);
+        await storage.setString("token", jsonResponse['token']);
         notifyListeners();
         return "";
       } catch (e) {
@@ -140,76 +146,93 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future upload(File imageFile) async {
-    // open a bytestream
-    var stream =
-        new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
-    // get file length
-    var length = await imageFile.length();
-    // string to uri
-    var uri =
-        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/updateuserinfo/${_loggedInUser!.id}");
-    // create multipart request
-    var request = new http.MultipartRequest("PUT", uri);
-    // multipart that takes file
-    var multipartFile = new http.MultipartFile('profileImage', stream, length,
-        filename: basename(imageFile.path.split('.').last));
-    // add file to multipart
-    request.files.add(multipartFile);
+    final storage = await SharedPreferences.getInstance();
+    if (storage.containsKey("token")) {
+      // open a bytestream
+      var stream =
+          new http.ByteStream(DelegatingStream.typed(imageFile.openRead()));
+      // get file length
+      var length = await imageFile.length();
+      // string to uri
+      var uri = Uri.parse(connectionProvider.connection.baseUrl +
+          "api/auth/updateuserinfo/${_loggedInUser!.id}");
+      // create multipart request
+      var request = new http.MultipartRequest("PUT", uri);
+      request.headers
+          .addAll({"Authorization": "Bearer ${storage.getString("token")!}"});
+      // multipart that takes file
+      var multipartFile = new http.MultipartFile('profileImage', stream, length,
+          filename: basename(imageFile.path.split('.').last));
+      // add file to multipart
+      request.files.add(multipartFile);
 
-    // send
-    final response = await request.send();
-    final respStr = await response.stream.bytesToString();
-    final jsonResponse = await jsonDecode(respStr);
-    if (response.statusCode == 201) {
-      try {
-        _loggedInUser = User(
-            id: jsonResponse['updatedUser']['_id'],
-            firstName: jsonResponse['updatedUser']['firstName'],
-            lastName: jsonResponse['updatedUser']['lastName'],
-            email: jsonResponse['updatedUser']['email'],
-            bio: jsonResponse['updatedUser']['bio'],
-            profileImage: jsonResponse['updatedUser']['profileImage'],
-            city: jsonResponse['updatedUser']['city'],
-            phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
-            accountType: jsonResponse['updatedUser']['accountType'],
-            createdAt: jsonResponse['updatedUser']['createdAt']);
+      // send
+      final response = await request.send();
+      final respStr = await response.stream.bytesToString();
+      final jsonResponse = await jsonDecode(respStr);
+      if (response.statusCode == 201) {
+        try {
+          _loggedInUser = User(
+              id: jsonResponse['updatedUser']['_id'],
+              firstName: jsonResponse['updatedUser']['firstName'],
+              lastName: jsonResponse['updatedUser']['lastName'],
+              email: jsonResponse['updatedUser']['email'],
+              bio: jsonResponse['updatedUser']['bio'],
+              profileImage: jsonResponse['updatedUser']['profileImage'],
+              city: jsonResponse['updatedUser']['city'],
+              phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
+              accountType: jsonResponse['updatedUser']['accountType'],
+              createdAt: jsonResponse['updatedUser']['createdAt']);
 
-        final updatedUserInfo = jsonEncode({
-          'id': jsonResponse['updatedUser']['_id'],
-          'firstName': jsonResponse['updatedUser']['firstName'],
-          'lastName': jsonResponse['updatedUser']['lastName'],
-          'email': jsonResponse['updatedUser']['email'],
-          'bio': jsonResponse['updatedUser']['bio'],
-          'profileImage': jsonResponse['updatedUser']['profileImage'],
-          'city': jsonResponse['updatedUser']['city'],
-          'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
-          'accountType': jsonResponse['updatedUser']['accountType'],
-          'createdAt': jsonResponse['updatedUser']['createdAt']
-        });
+          final updatedUserInfo = jsonEncode({
+            'id': jsonResponse['updatedUser']['_id'],
+            'firstName': jsonResponse['updatedUser']['firstName'],
+            'lastName': jsonResponse['updatedUser']['lastName'],
+            'email': jsonResponse['updatedUser']['email'],
+            'bio': jsonResponse['updatedUser']['bio'],
+            'profileImage': jsonResponse['updatedUser']['profileImage'],
+            'city': jsonResponse['updatedUser']['city'],
+            'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
+            'accountType': jsonResponse['updatedUser']['accountType'],
+            'createdAt': jsonResponse['updatedUser']['createdAt']
+          });
 
-        final currentStorage = await SharedPreferences.getInstance();
-        currentStorage.remove("userInfo");
+          final currentStorage = await SharedPreferences.getInstance();
+          currentStorage.remove("userInfo");
 
-        final newStorage = await SharedPreferences.getInstance();
-        newStorage.setString("userInfo", updatedUserInfo);
-        notifyListeners();
-        return jsonResponse['message'];
-      } catch (e) {
-        print("Error updating $e");
+          final newStorage = await SharedPreferences.getInstance();
+          newStorage.setString("userInfo", updatedUserInfo);
+          notifyListeners();
+          return jsonResponse['message'];
+        } catch (e) {
+          print("Error updating $e");
+        }
       }
     }
   }
 
   Future<void> fetchUserInfo() async {
+    final storage = await SharedPreferences.getInstance();
     isLoading = true;
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/fetchuserlist/${_loggedInUser!.accountType}");
-    final response = await http.get(url);
-    final jsonResponse =
-        jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
-    if (response.statusCode == 201) {
-      _usersList = jsonResponse.map<User>((json) => User.fromJson(json)).toList();
+    if (storage.containsKey("token")) {
+      final url = Uri.parse(connectionProvider.connection.baseUrl +
+          "api/auth/fetchuserlist/${_loggedInUser!.accountType}");
+      final response = await http.get(url,
+          headers: {"Authorization": "Bearer ${storage.getString("token")!}"});
+
+      if (response.statusCode == 201) {
+        final jsonResponse =
+            jsonDecode(response.body)['users'].cast<Map<String, dynamic>>();
+        _usersList =
+            jsonResponse.map<User>((json) => User.fromJson(json)).toList();
+      } else {
+        final jsonResponse = jsonDecode(response.body);
+        return jsonResponse['message'];
+      }
+      isLoading = false;
+    } else {
+      isLoading = false;
     }
-    isLoading = false;
   }
 
   Future<dynamic> updateUserProfileInfo(String firstName, String lastName,
@@ -218,66 +241,73 @@ class AuthProvider with ChangeNotifier {
         false) {
       return "لم تجري أي تغييرات";
     }
-    final url =
-        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/updateuserinfo/${_loggedInUser!.id}");
-    final response = await http.put(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'firstName': firstName,
-          'lastName': lastName,
-          'bio': bio,
-          'phoneNumber': phoneNumber,
-          'city': city,
-        }));
+    final storage = await SharedPreferences.getInstance();
+    if (storage.containsKey("token")) {
+      final url = Uri.parse(connectionProvider.connection.baseUrl +
+          "api/auth/updateuserinfo/${_loggedInUser!.id}");
+      final response = await http.put(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            "Authorization": "Bearer ${storage.getString("token")!}"
+          },
+          body: jsonEncode(<String, dynamic>{
+            'firstName': firstName,
+            'lastName': lastName,
+            'bio': bio,
+            'phoneNumber': phoneNumber,
+            'city': city,
+          }));
 
-    final jsonResponse = jsonDecode(response.body);
+      final jsonResponse = jsonDecode(response.body);
 
-    if (response.statusCode == 201) {
-      try {
-        _loggedInUser = User(
-            id: jsonResponse['updatedUser']['_id'],
-            firstName: jsonResponse['updatedUser']['firstName'],
-            lastName: jsonResponse['updatedUser']['lastName'],
-            email: jsonResponse['updatedUser']['email'],
-            bio: jsonResponse['updatedUser']['bio'],
-            profileImage: jsonResponse['updatedUser']['profileImage'],
-            city: jsonResponse['updatedUser']['city'],
-            phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
-            accountType: jsonResponse['updatedUser']['accountType'],
-            createdAt: jsonResponse['updatedUser']['createdAt']);
+      if (response.statusCode == 201) {
+        try {
+          _loggedInUser = User(
+              id: jsonResponse['updatedUser']['_id'],
+              firstName: jsonResponse['updatedUser']['firstName'],
+              lastName: jsonResponse['updatedUser']['lastName'],
+              email: jsonResponse['updatedUser']['email'],
+              bio: jsonResponse['updatedUser']['bio'],
+              profileImage: jsonResponse['updatedUser']['profileImage'],
+              city: jsonResponse['updatedUser']['city'],
+              phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
+              accountType: jsonResponse['updatedUser']['accountType'],
+              createdAt: jsonResponse['updatedUser']['createdAt']);
 
-        final updatedUserInfo = jsonEncode({
-          'id': jsonResponse['updatedUser']['_id'],
-          'firstName': jsonResponse['updatedUser']['firstName'],
-          'lastName': jsonResponse['updatedUser']['lastName'],
-          'email': jsonResponse['updatedUser']['email'],
-          'bio': jsonResponse['updatedUser']['bio'],
-          'profileImage': jsonResponse['updatedUser']['profileImage'],
-          'city': jsonResponse['updatedUser']['city'],
-          'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
-          'accountType': jsonResponse['updatedUser']['accountType'],
-          'createdAt': jsonResponse['updatedUser']['createdAt']
-        });
+          final updatedUserInfo = jsonEncode({
+            'id': jsonResponse['updatedUser']['_id'],
+            'firstName': jsonResponse['updatedUser']['firstName'],
+            'lastName': jsonResponse['updatedUser']['lastName'],
+            'email': jsonResponse['updatedUser']['email'],
+            'bio': jsonResponse['updatedUser']['bio'],
+            'profileImage': jsonResponse['updatedUser']['profileImage'],
+            'city': jsonResponse['updatedUser']['city'],
+            'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
+            'accountType': jsonResponse['updatedUser']['accountType'],
+            'createdAt': jsonResponse['updatedUser']['createdAt']
+          });
 
-        final currentStorage = await SharedPreferences.getInstance();
-        currentStorage.remove("userInfo");
+          final currentStorage = await SharedPreferences.getInstance();
+          currentStorage.remove("userInfo");
 
-        final newStorage = await SharedPreferences.getInstance();
-        newStorage.setString("userInfo", updatedUserInfo);
-        notifyListeners();
+          final newStorage = await SharedPreferences.getInstance();
+          newStorage.setString("userInfo", updatedUserInfo);
+          notifyListeners();
+          return jsonResponse['message'];
+        } catch (e) {
+          print("Error updating $e");
+        }
+      } else {
         return jsonResponse['message'];
-      } catch (e) {
-        print("Error updating $e");
       }
     } else {
-      return jsonResponse['message'];
+      return false;
     }
   }
 
   Future<dynamic> forgotPassword(String email) async {
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/auth/forgotpassword");
+    final url = Uri.parse(
+        connectionProvider.connection.baseUrl + "api/auth/forgotpassword");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -301,7 +331,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> autoLogin() async {
     final storage = await SharedPreferences.getInstance();
-    if (storage.containsKey("userInfo")) {
+    if (storage.containsKey("userInfo") && storage.containsKey("token")) {
       print("User Found");
       final localUserInfo = jsonDecode("${storage.getString("userInfo")}");
       _loggedInUser = User(
@@ -320,7 +350,7 @@ class AuthProvider with ChangeNotifier {
       return _loggedInUser;
     } else {
       print("not logged in");
-      return;
+      return null;
     }
   }
 

@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharikiapp/models/post.dart';
 import 'package:http/http.dart' as http;
+import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/connection_provider.dart';
 
 class PostProvider with ChangeNotifier {
@@ -23,63 +25,88 @@ class PostProvider with ChangeNotifier {
       String requiredJob,
       String description,
       String postType) async {
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/addnewpost");
-    final response = await http.post(url,
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'publisherID': publisherID,
-          'publisherPhoneNumber': publisherPhoneNumber,
-          'publisherProfileImage': publisherProfileImage,
-          'title': title,
-          'city': city,
-          'requiredJob': requiredJob,
-          'description': description,
-          'postStatus': "active",
-          'postType': postType,
-        }));
+    final storage = await SharedPreferences.getInstance();
+    if (storage.containsKey("token")) {
+      final url = Uri.parse(
+          connectionProvider.connection.baseUrl + "api/posts/addnewpost");
+      final response = await http.post(url,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            "Authorization": "Bearer ${storage.getString("token")!}"
+          },
+          body: jsonEncode(<String, dynamic>{
+            'publisherID': publisherID,
+            'publisherPhoneNumber': publisherPhoneNumber,
+            'publisherProfileImage': publisherProfileImage,
+            'title': title,
+            'city': city,
+            'requiredJob': requiredJob,
+            'description': description,
+            'postStatus': "active",
+            'postType': postType,
+          }));
 
-    final jsonResponse = jsonDecode(response.body);
+      final jsonResponse = jsonDecode(response.body);
 
-    if (response.statusCode == 201) {
-      fetchPosts(postType);
-      notifyListeners();
-      return jsonResponse['message'];
-    } else {
-      return jsonResponse['message'];
+      if (response.statusCode == 201) {
+        fetchPosts(postType);
+        notifyListeners();
+        return jsonResponse['message'];
+      } else {
+        return jsonResponse['message'];
+      }
     }
   }
 
   Future<void> fetchPosts(String accountType) async {
+    final storage = await SharedPreferences.getInstance();
     isLoading = true;
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/fetchposts/$accountType");
-    final response = await http.get(url);
-    final jsonResponse =
-        jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();
-    if (response.statusCode == 201) {
-      _posts = jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
-      notifyListeners();
+    if (storage.containsKey("token")) {
+      final url = Uri.parse(
+        connectionProvider.connection.baseUrl +
+            "api/posts/fetchposts/$accountType",
+      );
+      final response = await http.get(url, headers: {
+        "Authorization": "Bearer ${storage.getString("token")!}"
+      });
+      if (response.statusCode == 201) {
+        final jsonResponse =
+            jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();
+        _posts = jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
+        notifyListeners();
+      } else {
+        final jsonResponse = jsonDecode(response.body);
+        print(jsonResponse['message']);
+      }
+      isLoading = false;
     } else {
       isLoading = false;
-      return jsonResponse['message'];
     }
-    isLoading = false;
   }
 
-  Future<void> fetchMyPosts(String id) async{
+  Future<void> fetchMyPosts(String id) async {
+    final storage = await SharedPreferences.getInstance();
     isLoading = true;
-    final url = Uri.parse(connectionProvider.connection.baseUrl + "api/posts/fetchposts/myposts/$id");
-    final response = await http.get(url);
-    final jsonResponse =
-        jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();
-    if (response.statusCode == 201) {
-      _myPosts = jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
-      notifyListeners();
+    if (storage.containsKey("token")) {
+      final url = Uri.parse(connectionProvider.connection.baseUrl +
+          "api/posts/fetchposts/myposts/$id");
+      final response = await http.get(url, headers: {
+        "Authorization": "Bearer ${storage.getString("token")!}"
+      });
+
+      if (response.statusCode == 201) {
+        final jsonResponse =
+            jsonDecode(response.body)['posts'].cast<Map<String, dynamic>>();
+        _myPosts =
+            jsonResponse.map<Post>((json) => Post.fromJson(json)).toList();
+        notifyListeners();
+      } else {
+        final jsonResponse = jsonDecode(response.body);
+        return jsonResponse['message'];
+      }
+      isLoading = false;
     } else {
       isLoading = false;
-      return jsonResponse['message'];
     }
-    isLoading = false;
   }
 }

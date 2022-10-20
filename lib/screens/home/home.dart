@@ -61,11 +61,14 @@ void initState() {
     } else {
       _currentPage = 0;
     }
-    _pageController.animateToPage(
+    if(_pageController.hasClients){
+      _pageController.animateToPage(
       _currentPage,
       duration: Duration(milliseconds: 350),
       curve: Curves.easeIn,
     );
+    }
+    
   });
 }
   @override
