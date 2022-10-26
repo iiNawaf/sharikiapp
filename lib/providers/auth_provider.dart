@@ -42,7 +42,8 @@ class AuthProvider with ChangeNotifier {
             city: jsonResponse['user']['city'],
             phoneNumber: jsonResponse['user']['phoneNumber'],
             accountType: jsonResponse['user']['accountType'],
-            createdAt: jsonResponse['user']['createdAt']);
+            createdAt: jsonResponse['user']['createdAt'],
+            accountStatus: jsonResponse['user']['accountStatus']);
 
         final loggedInUserInfo = jsonEncode({
           'id': jsonResponse['user']['_id'],
@@ -54,7 +55,8 @@ class AuthProvider with ChangeNotifier {
           'city': jsonResponse['user']['city'],
           'phoneNumber': jsonResponse['user']['phoneNumber'],
           'accountType': jsonResponse['user']['accountType'],
-          'createdAt': jsonResponse['user']['createdAt']
+          'createdAt': jsonResponse['user']['createdAt'],
+          'accountStatus': jsonResponse['user']['accountStatus']
         });
 
         final storage = await SharedPreferences.getInstance();
@@ -116,7 +118,8 @@ class AuthProvider with ChangeNotifier {
             city: jsonResponse['user']['city'],
             phoneNumber: jsonResponse['user']['phoneNumber'],
             accountType: jsonResponse['user']['accountType'],
-            createdAt: jsonResponse['user']['createdAt']);
+            createdAt: jsonResponse['user']['createdAt'],
+            accountStatus: jsonResponse['user']['accountStatus']);
 
         final createdUserInfo = jsonEncode({
           'id': jsonResponse['user']['_id'],
@@ -128,7 +131,8 @@ class AuthProvider with ChangeNotifier {
           'city': jsonResponse['user']['city'],
           'phoneNumber': jsonResponse['user']['phoneNumber'],
           'accountType': jsonResponse['user']['accountType'],
-          'createdAt': jsonResponse['user']['createdAt']
+          'createdAt': jsonResponse['user']['createdAt'],
+          'accountStatus': jsonResponse['user']['accountStatus'],
         });
 
         final storage = await SharedPreferences.getInstance();
@@ -173,16 +177,18 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode == 201) {
         try {
           _loggedInUser = User(
-              id: jsonResponse['updatedUser']['_id'],
-              firstName: jsonResponse['updatedUser']['firstName'],
-              lastName: jsonResponse['updatedUser']['lastName'],
-              email: jsonResponse['updatedUser']['email'],
-              bio: jsonResponse['updatedUser']['bio'],
-              profileImage: jsonResponse['updatedUser']['profileImage'],
-              city: jsonResponse['updatedUser']['city'],
-              phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
-              accountType: jsonResponse['updatedUser']['accountType'],
-              createdAt: jsonResponse['updatedUser']['createdAt']);
+            id: jsonResponse['updatedUser']['_id'],
+            firstName: jsonResponse['updatedUser']['firstName'],
+            lastName: jsonResponse['updatedUser']['lastName'],
+            email: jsonResponse['updatedUser']['email'],
+            bio: jsonResponse['updatedUser']['bio'],
+            profileImage: jsonResponse['updatedUser']['profileImage'],
+            city: jsonResponse['updatedUser']['city'],
+            phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
+            accountType: jsonResponse['updatedUser']['accountType'],
+            createdAt: jsonResponse['updatedUser']['createdAt'],
+            // accountStatus: jsonResponse['user']['accountStatus']
+          );
 
           final updatedUserInfo = jsonEncode({
             'id': jsonResponse['updatedUser']['_id'],
@@ -194,7 +200,8 @@ class AuthProvider with ChangeNotifier {
             'city': jsonResponse['updatedUser']['city'],
             'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
             'accountType': jsonResponse['updatedUser']['accountType'],
-            'createdAt': jsonResponse['updatedUser']['createdAt']
+            'createdAt': jsonResponse['updatedUser']['createdAt'],
+            // 'accountStatus': jsonResponse['user']['accountStatus'],
           });
 
           final currentStorage = await SharedPreferences.getInstance();
@@ -272,7 +279,8 @@ class AuthProvider with ChangeNotifier {
               city: jsonResponse['updatedUser']['city'],
               phoneNumber: jsonResponse['updatedUser']['phoneNumber'],
               accountType: jsonResponse['updatedUser']['accountType'],
-              createdAt: jsonResponse['updatedUser']['createdAt']);
+              createdAt: jsonResponse['updatedUser']['createdAt'],
+              accountStatus: jsonResponse['user']['accountStatus']);
 
           final updatedUserInfo = jsonEncode({
             'id': jsonResponse['updatedUser']['_id'],
@@ -284,7 +292,8 @@ class AuthProvider with ChangeNotifier {
             'city': jsonResponse['updatedUser']['city'],
             'phoneNumber': jsonResponse['updatedUser']['phoneNumber'],
             'accountType': jsonResponse['updatedUser']['accountType'],
-            'createdAt': jsonResponse['updatedUser']['createdAt']
+            'createdAt': jsonResponse['updatedUser']['createdAt'],
+            'accountStatus': jsonResponse['user']['accountStatus']
           });
 
           final currentStorage = await SharedPreferences.getInstance();
@@ -335,17 +344,17 @@ class AuthProvider with ChangeNotifier {
       print("User Found");
       final localUserInfo = jsonDecode("${storage.getString("userInfo")}");
       _loggedInUser = User(
-        id: localUserInfo['id'],
-        firstName: localUserInfo['firstName'],
-        lastName: localUserInfo['lastName'],
-        email: localUserInfo['email'],
-        bio: localUserInfo['bio'],
-        profileImage: localUserInfo['profileImage'],
-        city: localUserInfo['city'],
-        phoneNumber: localUserInfo['phoneNumber'],
-        accountType: localUserInfo['accountType'],
-        createdAt: localUserInfo['createdAt'],
-      );
+          id: localUserInfo['id'],
+          firstName: localUserInfo['firstName'],
+          lastName: localUserInfo['lastName'],
+          email: localUserInfo['email'],
+          bio: localUserInfo['bio'],
+          profileImage: localUserInfo['profileImage'],
+          city: localUserInfo['city'],
+          phoneNumber: localUserInfo['phoneNumber'],
+          accountType: localUserInfo['accountType'],
+          createdAt: localUserInfo['createdAt'],
+          accountStatus: localUserInfo['accountStatus']);
       print("logged in");
       return _loggedInUser;
     } else {
@@ -380,5 +389,29 @@ class AuthProvider with ChangeNotifier {
       }
     }
     return false;
+  }
+
+  Future<dynamic> disableAccount() async {
+    final storage = await SharedPreferences.getInstance();
+    print(storage.containsKey("token"));
+    if (storage.containsKey("token")) {
+      final url = Uri.parse(connectionProvider.connection.baseUrl +
+          "api/auth/disableuser/${_loggedInUser!.id}");
+      final response = await http.put(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer ${storage.getString("token")!}"
+        },
+      );
+      final jsonResponse = jsonDecode(response.body);
+
+      if (response.statusCode == 201) {
+        return "";
+      } else {
+        return jsonResponse['message'];
+      }
+    }
+    return "";
   }
 }

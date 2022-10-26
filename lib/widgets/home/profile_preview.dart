@@ -34,7 +34,7 @@ class ProfilePreview extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.location_pin, color: subTextColor, size: 15,),
+                    Image.asset('./assets/icons/location.png'),
                     Text(
                       "${user.city}",
                       style: TextStyle(

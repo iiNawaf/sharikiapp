@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/models/post.dart';
 import 'package:sharikiapp/models/time.dart';
-import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';

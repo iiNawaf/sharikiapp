@@ -12,6 +12,7 @@ class User {
   String phoneNumber;
   String accountType;
   dynamic createdAt;
+  String? accountStatus;
 
   User(
       {required this.id,
@@ -23,7 +24,8 @@ class User {
       required this.city,
       required this.phoneNumber,
       required this.accountType,
-      required this.createdAt});
+      required this.createdAt,
+      this.accountStatus});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -36,6 +38,7 @@ class User {
         city: json['city'],
         phoneNumber: json['phoneNumber'],
         accountType: json['accountType'],
-        createdAt: json['createdAt']);
+        createdAt: json['createdAt'],
+        accountStatus: json['accountStatus']);
   }
 }
