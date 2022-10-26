@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 import 'package:sharikiapp/models/connect.dart';
 import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
-// https://shariki-app.herokuapp.com/
+
 class ConnectionProvider with ChangeNotifier {
-  Connect _connection = Connect(baseUrl: "http://localhost:4000/");
+  Connect _connection = Connect(baseUrl: "https://shariki-app.herokuapp.com/");
   Connect get connection => _connection;
 
   Future<bool> checkConnectivity(BuildContext context) async {
@@ -31,7 +31,7 @@ class ConnectionProvider with ChangeNotifier {
         );
       });
     }
-    print("Connected? : $isConnected");
+    print(isConnected);
     return isConnected;
   }
 }
