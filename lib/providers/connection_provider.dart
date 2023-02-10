@@ -5,7 +5,7 @@ import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 
 class ConnectionProvider with ChangeNotifier {
-  Connect _connection = Connect(baseUrl: "http://localhost:4000/");
+  Connect _connection = Connect(baseUrl: "http://shariki.nawaf-alqattash.com/");
   Connect get connection => _connection;
 
   Future<bool> checkConnectivity(BuildContext context) async {

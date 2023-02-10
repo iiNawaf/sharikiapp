@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:open_whatsapp/open_whatsapp.dart';
-import 'package:sharikiapp/widgets/shared_widgets/shared_alert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactBtn extends StatelessWidget {
