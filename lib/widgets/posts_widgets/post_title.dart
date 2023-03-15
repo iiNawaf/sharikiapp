@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 
 class PostTitle extends StatelessWidget {
   String title;

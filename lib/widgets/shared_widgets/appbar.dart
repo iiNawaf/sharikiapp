@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/screens/home/home.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 
 class HomeAppBar extends StatelessWidget {
   String title;

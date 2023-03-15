@@ -4,7 +4,7 @@ import 'package:sharikiapp/models/city.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/sign_up/choose_account_type.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_dropdown.dart';

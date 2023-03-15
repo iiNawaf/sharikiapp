@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/screens/profile/user_profile.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 
 class UserCard extends StatelessWidget {
   User user;

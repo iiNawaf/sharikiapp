@@ -4,7 +4,7 @@ import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/home.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';

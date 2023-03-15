@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/screens/sign_up/sign_up.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 import 'package:sharikiapp/widgets/sign_up/account_type.dart';

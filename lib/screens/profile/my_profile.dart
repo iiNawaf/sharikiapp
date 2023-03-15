@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/city.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
-import 'package:sharikiapp/styles.dart';
 import 'package:sharikiapp/widgets/profile/delete_button.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';

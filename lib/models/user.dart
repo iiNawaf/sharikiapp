@@ -1,5 +1,3 @@
-import 'package:sharikiapp/providers/auth_provider.dart';
-import 'package:sharikiapp/providers/post_provider.dart';
 
 class User {
   String id;

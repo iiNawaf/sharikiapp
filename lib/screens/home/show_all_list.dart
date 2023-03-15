@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sharikiapp/models/post.dart';
 import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/screens/home/home.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sharikiapp/utilities/functions/open_whatsapp.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactBtn extends StatelessWidget {
@@ -22,11 +23,10 @@ class ContactBtn extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         final numberWithCode = phoneNumber.replaceFirst("0", "00966");
-        print(numberWithCode);
         if (isWhatsApp) {
-          final url = "https://wa.me/$numberWithCode";
-          await launch(url);
+          openWhatsApp(numberWithCode);
         } else if (isPhoneCall) {
+          print("asdf");
           await launch("tel://$numberWithCode");
         } else {
           // Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile(user: user)));

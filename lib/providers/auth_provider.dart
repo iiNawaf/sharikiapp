@@ -7,11 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharikiapp/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:sharikiapp/providers/connection_provider.dart';
+import 'package:sharikiapp/services/api_services.dart';
 
 class AuthProvider with ChangeNotifier {
-  ConnectionProvider connectionProvider;
-  AuthProvider({required this.connectionProvider});
+  ApiServices apiServices = ApiServices();
   User? _loggedInUser;
   List<User>? _usersList = [];
   User? get loggedInUser => _loggedInUser;
@@ -20,7 +19,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> login(String email, String password) async {
     final url =
-        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/login");
+        Uri.parse(apiServices.baseUrl + "api/auth/login");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
@@ -84,7 +83,7 @@ class AuthProvider with ChangeNotifier {
       String accountType,
       String city) async {
     final url =
-        Uri.parse(connectionProvider.connection.baseUrl + "api/auth/signup");
+        Uri.parse(apiServices.baseUrl + "api/auth/signup");
     final response = await http.post(
       url,
       headers: <String, String>{
@@ -158,7 +157,7 @@ class AuthProvider with ChangeNotifier {
       // get file length
       var length = await imageFile.length();
       // string to uri
-      var uri = Uri.parse(connectionProvider.connection.baseUrl +
+      var uri = Uri.parse(apiServices.baseUrl +
           "api/auth/updateuserinfo/${_loggedInUser!.id}");
       // create multipart request
       var request = new http.MultipartRequest("PUT", uri);
@@ -222,7 +221,7 @@ class AuthProvider with ChangeNotifier {
     final storage = await SharedPreferences.getInstance();
     isLoading = true;
     if (storage.containsKey("token")) {
-      final url = Uri.parse(connectionProvider.connection.baseUrl +
+      final url = Uri.parse(apiServices.baseUrl +
           "api/auth/fetchuserlist/${_loggedInUser!.accountType}");
       final response = await http.get(url,
           headers: {"Authorization": "Bearer ${storage.getString("token")!}"});
@@ -250,7 +249,7 @@ class AuthProvider with ChangeNotifier {
     }
     final storage = await SharedPreferences.getInstance();
     if (storage.containsKey("token")) {
-      final url = Uri.parse(connectionProvider.connection.baseUrl +
+      final url = Uri.parse(apiServices.baseUrl +
           "api/auth/updateuserinfo/${_loggedInUser!.id}");
       final response = await http.put(url,
           headers: <String, String>{
@@ -316,7 +315,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<dynamic> forgotPassword(String email) async {
     final url = Uri.parse(
-        connectionProvider.connection.baseUrl + "api/auth/forgotpassword");
+        apiServices.baseUrl + "api/auth/forgotpassword");
     final response = await http.post(url,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
@@ -395,7 +394,7 @@ class AuthProvider with ChangeNotifier {
     final storage = await SharedPreferences.getInstance();
     print(storage.containsKey("token"));
     if (storage.containsKey("token")) {
-      final url = Uri.parse(connectionProvider.connection.baseUrl +
+      final url = Uri.parse(apiServices.baseUrl +
           "api/auth/disableuser/${_loggedInUser!.id}");
       final response = await http.put(
         url,

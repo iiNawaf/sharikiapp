@@ -4,7 +4,7 @@ import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/add_new_request/add_new_request.dart';
 import 'package:sharikiapp/screens/my_posts/my_posts.dart';
 import 'package:sharikiapp/screens/profile/my_profile.dart';
-import 'package:sharikiapp/styles.dart';
+import 'package:sharikiapp/utilities/styles/constant_styles.dart';
 
 class HomeDrawer extends StatelessWidget {
   String title;
@@ -18,6 +18,9 @@ class HomeDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: primaryColor
+            ),
             accountName: Text(title),
             accountEmail: Text(
               email,
