@@ -4,7 +4,7 @@ import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/add_new_request/add_new_request.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/screens/profile/my_profile.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 
 class AppManager extends StatefulWidget {
   static int currentIndex = 0;

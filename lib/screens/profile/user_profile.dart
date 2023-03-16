@@ -4,8 +4,7 @@ import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
-import 'package:sharikiapp/screens/home/home.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/home/contact_btn.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
@@ -14,6 +13,7 @@ import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
 import 'package:sharikiapp/widgets/profile/profile_image.dart';
+import 'package:sharikiapp/widgets/shared_widgets/post_info.dart';
 
 class UserProfile extends StatelessWidget {
   User user;
@@ -108,14 +108,14 @@ class UserProfile extends StatelessWidget {
                                   isScrollControlled: true,
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(15)),
-                                  builder: (context) => postInfo(
-                                    post.posts[index].title,
-                                    post.posts[index].description,
-                                    post.posts[index].city,
-                                    post.posts[index].requiredJob,
-                                    post.posts[index].publisherPhoneNumber,
-                                    post.posts[index].publisherProfileImage,
-                                    post.posts[index].postType
+                                  builder: (context) => PostInfo(
+                                    title: post.posts[index].title,
+                                    description: post.posts[index].description,
+                                    city: post.posts[index].city,
+                                    requiredJob: post.posts[index].requiredJob,
+                                    phoneNumber: post.posts[index].publisherPhoneNumber,
+                                    image: post.posts[index].publisherProfileImage,
+                                    accountType: post.posts[index].postType
                                   ),
                                 ),
                                 child: Container(

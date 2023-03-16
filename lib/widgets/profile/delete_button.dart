@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/shared_alert_dialog.dart';
 
@@ -36,10 +37,12 @@ class DeleteButton extends StatelessWidget {
                         setState(() {
                           isLoading = false;
                         });
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                        Future.delayed(Duration(milliseconds: 500), () {auth.logout();});
+                        navigateToFirst(context);
+                        Future.delayed(Duration(milliseconds: 500), () {
+                          auth.logout();
+                        });
                       },
-                      click2: () => Navigator.pop(context),
+                      click2: () => navigateBack(context),
                     );
             });
           }),

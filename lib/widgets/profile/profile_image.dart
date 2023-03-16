@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 
 class ProfileImage extends StatelessWidget {
   ImageProvider<Object> image;

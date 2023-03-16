@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sharikiapp/models/post.dart';
 import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/screens/home/home.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';
@@ -10,6 +10,7 @@ import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_status.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
+import 'package:sharikiapp/widgets/shared_widgets/post_info.dart';
 
 class ShowAllList extends StatelessWidget {
   List<Post> posts;
@@ -47,14 +48,14 @@ class ShowAllList extends StatelessWidget {
                         isScrollControlled: true,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
-                        builder: (context) => postInfo(
-                            posts[index].title,
-                            posts[index].description,
-                            posts[index].city,
-                            posts[index].requiredJob,
-                            posts[index].publisherPhoneNumber,
-                            posts[index].publisherProfileImage,
-                            posts[index].postType),
+                        builder: (context) => PostInfo(
+                            title: posts[index].title,
+                            description: posts[index].description,
+                            city: posts[index].city,
+                            requiredJob: posts[index].requiredJob,
+                            phoneNumber: posts[index].publisherPhoneNumber,
+                            image: posts[index].publisherProfileImage,
+                            accountType: posts[index].postType),
                       );
                     },
                     child: Container(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/screens/sign_up/sign_up.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
 import 'package:sharikiapp/widgets/sign_up/account_type.dart';
@@ -84,17 +85,11 @@ class _ChooseAccountTypeScreenState extends State<ChooseAccountTypeScreen> {
                       SubmitButton(
                         submit: () {
                           if (_accTypes == AccTypes.individual) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SignUpScreen(accType: _accTypes)));
+                            navigateTo(
+                                context, SignUpScreen(accType: _accTypes));
                           } else if (_accTypes == AccTypes.project) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SignUpScreen(accType: _accTypes)));
+                            navigateTo(
+                                context, SignUpScreen(accType: _accTypes));
                           }
                         },
                         title: "التالي",
@@ -130,7 +125,7 @@ Widget _pageTitle() {
 
 Widget _goBackToLogin(BuildContext context) {
   return GestureDetector(
-    onTap: () => Navigator.pop(context),
+    onTap: () => navigateBack(context),
     child: Text(
       "عندك حساب؟",
       style: TextStyle(

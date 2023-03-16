@@ -4,13 +4,13 @@ import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/show_all_list.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/screens/timeline/timeline.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/drawer.dart';
-import 'package:sharikiapp/widgets/home/contact_btn.dart';
 import 'package:sharikiapp/widgets/home/profile_preview.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
-import 'package:sharikiapp/widgets/posts_widgets/post_description.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_status.dart';
@@ -18,6 +18,8 @@ import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 import 'dart:async';
+
+import 'package:sharikiapp/widgets/shared_widgets/post_info.dart';
 
 class HomeScreen extends StatefulWidget {
   static final GlobalKey<ScaffoldState> scaffoldKey =
@@ -30,15 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isLoading = false;
   bool isInit = true;
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async{
     if (isInit) {
       setState(() {
         isLoading = true;
       });
       final postProvider = Provider.of<PostProvider>(context, listen: false);
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      postProvider.fetchPosts(authProvider.loggedInUser!.accountType);
-      authProvider.fetchUserInfo();
+      await postProvider.fetchPosts(authProvider.loggedInUser!.accountType);
+      await authProvider.fetchUserInfo();
       setState(() {
         isLoading = false;
       });
@@ -116,10 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           auth.loggedInUser!.accountType == 'individual'
                               ? "تصفح المشاريع"
                               : "تصفح الأفراد",
-                          style: TextStyle(
-                              color: textColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold)),
+                          style: Theme.of(context).textTheme.titleMedium),
                     ),
                   ),
                   auth.usersList!.length == 0
@@ -160,22 +159,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 auth.loggedInUser!.accountType == 'individual'
                                     ? "أحدث اعلانات المشاريع"
                                     : "أحدث اعلانات الأفراد",
-                                style: TextStyle(
-                                    color: textColor,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold)),
+                                style: Theme.of(context).textTheme.titleMedium),
                             post.posts.length > 10
                                 ? GestureDetector(
-                                    onTap: () => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ShowAllList(
-                                                posts: post.posts))),
+                                    onTap: () => navigateTo(context, ShowAllList(
+                                                posts: post.posts)),
                                     child: Text("المزيد",
-                                        style: TextStyle(
-                                            color: primaryColor,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold)))
+                                        style: Theme.of(context).textTheme.titleSmall))
                                 : Container(),
                           ],
                         )),
@@ -224,16 +214,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(15)),
-                                            builder: (context) => postInfo(
-                                                post.posts[index].title,
-                                                post.posts[index].description,
-                                                post.posts[index].city,
-                                                post.posts[index].requiredJob,
-                                                post.posts[index]
+                                            builder: (context) => PostInfo(
+                                                title: post.posts[index].title,
+                                                description: post.posts[index].description,
+                                                city: post.posts[index].city,
+                                                requiredJob: post.posts[index].requiredJob,
+                                                phoneNumber: post.posts[index]
                                                     .publisherPhoneNumber,
-                                                post.posts[index]
+                                                image: post.posts[index]
                                                     .publisherProfileImage,
-                                                post.posts[index].postType),
+                                                accountType: post.posts[index].postType),
                                           );
                                         },
                                         child: Container(
@@ -319,111 +309,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                 ],
               ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              floatingActionButton: FloatingActionButton(
+                onPressed: ()=> navigateTo(context, TimelineScreen()),
+                backgroundColor: primaryColor,
+                child: Image.asset('./assets/icons/connect.png')
+              ),
       ),
     );
   }
-}
-
-Widget postInfo(String title, String description, String city,
-    String requiredJob, String phoneNumber, String image, String accountType) {
-  return Wrap(
-    children: [
-      Column(
-        children: [
-          SizedBox(height: 15),
-          PostImage(
-            height: 130,
-            width: 130,
-            img: image,
-          ),
-          SizedBox(height: 20),
-          Container(height: 1, color: bgColor),
-          Padding(
-            padding:
-                const EdgeInsets.only(right: 15, left: 15, top: 8, bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("الاسم",
-                    style: TextStyle(
-                        color: textColor, fontWeight: FontWeight.bold)),
-                PostTitle(title: title)
-              ],
-            ),
-          ),
-          Container(height: 1, color: bgColor),
-          Padding(
-            padding:
-                const EdgeInsets.only(right: 15, left: 15, top: 8, bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("المدينة",
-                    style: TextStyle(
-                        color: textColor, fontWeight: FontWeight.bold)),
-                PostTitle(title: city)
-              ],
-            ),
-          ),
-          Container(height: 1, color: bgColor),
-          Padding(
-            padding:
-                const EdgeInsets.only(right: 15, left: 15, top: 8, bottom: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                    accountType == "individual"
-                        ? "المجال العملي"
-                        : "المجال العملي المطلوب",
-                    style: TextStyle(
-                        color: textColor, fontWeight: FontWeight.bold)),
-                PostTitle(title: requiredJob)
-              ],
-            ),
-          ),
-          Container(height: 1, color: bgColor),
-          Padding(
-            padding: EdgeInsets.only(right: 15, left: 15, top: 8, bottom: 8),
-            child: PostDescription(
-                description: description, overflow: TextOverflow.visible),
-          ),
-        ],
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ContactBtn(
-              iconPath: './assets/icons/whatsapp.png',
-              isWhatsApp: true,
-              isPhoneCall: false,
-              isVisitProfile: false,
-              color: bgColor,
-              phoneNumber: phoneNumber,
-            ),
-            SizedBox(width: 20),
-            ContactBtn(
-              iconPath: './assets/icons/external-link.png',
-              isWhatsApp: false,
-              isPhoneCall: false,
-              isVisitProfile: true,
-              color: bgColor,
-              phoneNumber: phoneNumber,
-            ),
-            SizedBox(width: 20),
-            ContactBtn(
-              iconPath: './assets/icons/telephone.png',
-              isWhatsApp: false,
-              isPhoneCall: true,
-              isVisitProfile: false,
-              color: bgColor,
-              phoneNumber: phoneNumber,
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
 }

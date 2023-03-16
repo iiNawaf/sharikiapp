@@ -6,8 +6,8 @@ import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/screens/login/login.dart';
 import 'package:sharikiapp/screens/splash/splash.dart';
-import 'package:sharikiapp/services/api_services.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/services/api/api_services.dart';
+import 'package:sharikiapp/styles/themes.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 
 void main() {
@@ -46,13 +46,7 @@ class MyApp extends StatelessWidget {
               supportedLocales: [
                 Locale("ar", "AE"),
               ],
-              theme: ThemeData(
-                fontFamily: 'Cairo',
-                primaryColor: primaryColor,
-                scaffoldBackgroundColor: bgColor,
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-              ),
+              theme: defaultTheme,
               home: FutureBuilder<bool>(
                   future: apiServices.checkConnectivity(context),
                   builder: (context, snapshot) {

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/models/user.dart';
 import 'package:sharikiapp/screens/profile/user_profile.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 
 class ProfilePreview extends StatelessWidget {
   User user;
@@ -12,7 +13,7 @@ class ProfilePreview extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: GestureDetector(
-        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfile(user: user))),
+        onTap: () => navigateTo(context, UserProfile(user: user)),
         child: Container(
             height: 100,
             width: 100,

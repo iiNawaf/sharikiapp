@@ -4,7 +4,8 @@ import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/login/forgot_password.dart';
 import 'package:sharikiapp/screens/sign_up/choose_account_type.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
 import 'package:sharikiapp/widgets/shared_widgets/submit_button.dart';
@@ -62,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 maxLines: 1),
             SizedBox(height: 5),
             GestureDetector(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword())),
+              onTap: () => navigateTo(context, ForgotPassword()),
               child: Text(
                 "نسيت كلمة المرور",
                 style: TextStyle(
@@ -98,10 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: textColor,
                         fontWeight: FontWeight.bold)),
                 GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChooseAccountTypeScreen())),
+                    onTap: () => navigateTo(context, ChooseAccountTypeScreen()),
                     child: Text("سجل الآن",
                         style: TextStyle(
                             fontSize: 16,

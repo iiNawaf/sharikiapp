@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharikiapp/models/post.dart';
 import 'package:http/http.dart' as http;
-import 'package:sharikiapp/services/api_services.dart';
+import 'package:sharikiapp/services/api/api_services.dart';
 
 class PostProvider with ChangeNotifier {
   ApiServices apiServices = ApiServices();

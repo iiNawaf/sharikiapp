@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
@@ -76,7 +77,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                       content: 'تم ارسال رسالة الى بريدك الالكتروني تتضمن استعادة كلمة المرور.',
                                       btnTitle: 'حسنا',
                                       btnTitle2: "",
-                                      click: () => Navigator.popUntil(context, (route) => route.isFirst),
+                                      click: () => navigateToFirst(context),
                                       click2: () {},
                                     );
                                   });

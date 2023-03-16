@@ -4,7 +4,8 @@ import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/screens/add_new_request/add_new_request.dart';
 import 'package:sharikiapp/screens/my_posts/my_posts.dart';
 import 'package:sharikiapp/screens/profile/my_profile.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 
 class HomeDrawer extends StatelessWidget {
   String title;
@@ -18,9 +19,7 @@ class HomeDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: primaryColor
-            ),
+            decoration: BoxDecoration(color: primaryColor),
             accountName: Text(title),
             accountEmail: Text(
               email,
@@ -44,42 +43,30 @@ class HomeDrawer extends StatelessWidget {
             leading: Icon(Icons.home),
             title: const Text('الرئيسية'),
             onTap: () {
-              Navigator.pop(context);
+              navigateBack(context);
             },
           ),
           ListTile(
             leading: Icon(Icons.add),
             title: const Text('طلب جديد'),
             onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddNewRequestScreen()));
+              navigateTo(context, AddNewRequestScreen());
             },
           ),
           ListTile(
             leading: Icon(Icons.library_books),
             title: const Text('اعلاناتي'),
-            onTap: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MyPosts()));
-            },
+            onTap: () => navigateTo(context, MyPosts())
           ),
           ListTile(
             leading: Icon(Icons.person),
             title: const Text('الملف الشخصي'),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfileScreen()));
-            },
+            onTap: () => navigateTo(context, MyProfileScreen())
           ),
           ListTile(
             leading: Icon(Icons.logout),
             title: const Text('تسجيل الخروج'),
-            onTap: () {
-              auth.logout();
-            },
+            onTap: () => auth.logout(),
           ),
         ],
       ),

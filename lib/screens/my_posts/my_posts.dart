@@ -3,8 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
-import 'package:sharikiapp/screens/home/home.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
@@ -13,6 +12,7 @@ import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_status.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
+import 'package:sharikiapp/widgets/shared_widgets/post_info.dart';
 
 class MyPosts extends StatefulWidget {
   @override
@@ -70,14 +70,14 @@ class _MyPostsState extends State<MyPosts> {
                             isScrollControlled: true,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
-                            builder: (context) => postInfo(
-                                post.myPosts[index].title,
-                                post.myPosts[index].description,
-                                post.myPosts[index].city,
-                                post.myPosts[index].requiredJob,
-                                post.myPosts[index].publisherPhoneNumber,
-                                post.myPosts[index].publisherProfileImage,
-                                post.myPosts[index].postType
+                            builder: (context) => PostInfo(
+                                title: post.myPosts[index].title,
+                                description: post.myPosts[index].description,
+                                city: post.myPosts[index].city,
+                                requiredJob: post.myPosts[index].requiredJob,
+                                phoneNumber: post.myPosts[index].publisherPhoneNumber,
+                                image: post.myPosts[index].publisherProfileImage,
+                                accountType: post.myPosts[index].postType
                                 ),
                           ),
                           child: Container(

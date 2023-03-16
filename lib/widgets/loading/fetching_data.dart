@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 
 class FetchingDataLoading extends StatelessWidget {
   static GlobalKey<ScaffoldMessengerState> scaffoldKey =

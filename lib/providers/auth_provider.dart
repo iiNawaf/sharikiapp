@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sharikiapp/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:sharikiapp/services/api_services.dart';
+import 'package:sharikiapp/services/api/api_services.dart';
 
 class AuthProvider with ChangeNotifier {
   ApiServices apiServices = ApiServices();

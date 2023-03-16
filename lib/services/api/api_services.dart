@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sharikiapp/utilities/styles/constant_styles.dart';
+import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 import 'package:http/http.dart' as http;
 

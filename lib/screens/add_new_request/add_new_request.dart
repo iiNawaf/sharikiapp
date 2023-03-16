@@ -4,6 +4,7 @@ import 'package:sharikiapp/models/city.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
+import 'package:sharikiapp/services/functions/navigations.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
@@ -119,9 +120,9 @@ class _AddNewRequestScreenState extends State<AddNewRequestScreen> {
                             _requiredJobController.clear();
                             isLoading = false;
                           });
-                          Navigator.pop(context);
+                          navigateBack(context);
                           _showSuccessDialog(context);
-                          Navigator.popUntil(context, (route) => route.isFirst);
+                          navigateToFirst(context);
                         }
                       })
             ],
@@ -142,8 +143,8 @@ Future<void> _showSuccessDialog(BuildContext context) async {
         content: 'تم ارسال طلبك بنجاح',
         btnTitle: 'حسنا',
         btnTitle2: "",
-        click: () => Navigator.pop(context),
-        click2: (){},
+        click: () => navigateBack(context),
+        click2: () {},
       );
     },
   );
