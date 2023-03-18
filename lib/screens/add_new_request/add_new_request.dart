@@ -5,6 +5,7 @@ import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/services/functions/show_alert_dialog.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
 import 'package:sharikiapp/widgets/shared_widgets/input_text_field.dart';
@@ -134,19 +135,15 @@ class _AddNewRequestScreenState extends State<AddNewRequestScreen> {
 }
 
 Future<void> _showSuccessDialog(BuildContext context) async {
-  return showDialog<void>(
-    context: context,
-    barrierDismissible: false, // user must tap button!
-    builder: (BuildContext context) {
-      return SharedAlertDialog(
-        title: 'تم ارسال طلبك',
-        content: 'تم ارسال طلبك بنجاح',
-        btnTitle: 'حسنا',
-        btnTitle2: "",
-        click: () => navigateBack(context),
-        click2: () {},
-      );
-    },
+  return showAlertDialog(
+    context,
+    false,
+    'تم ارسال طلبك',
+    'تم ارسال طلبك بنجاح',
+    'حسنا',
+    "",
+    () => navigateBack(context),
+    () {},
   );
 }
 

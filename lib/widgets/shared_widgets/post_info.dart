@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles/constant_styles.dart';
-import 'package:sharikiapp/widgets/home/contact_btn.dart';
+import 'package:sharikiapp/widgets/shared_widgets/contact_btn.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_description.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
+import 'package:sharikiapp/widgets/shared_widgets/contact_btn.dart';
 import 'package:sharikiapp/widgets/timeline/timeline_post_content.dart';
 import 'package:sharikiapp/widgets/timeline/timeline_post_image.dart';
 import 'package:sharikiapp/widgets/timeline/timeline_post_time.dart';
@@ -49,7 +50,14 @@ class TimelineScreen extends StatelessWidget {
                 TimelinePostTime()
                   ],
                 ),
-                TimelinePostContent()
+                TimelinePostContent(),
+                // ContactBtn(
+                //   iconPath: './assets/icons/whatsapp.png', 
+                //   isPhoneCall: false, 
+                //   isVisitProfile: false, 
+                //   isWhatsApp: true, 
+                //   color: bgColor, 
+                //   phoneNumber: "0594789491"),
               ],
             ),
           ),

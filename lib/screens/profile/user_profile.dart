@@ -6,7 +6,6 @@ import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
-import 'package:sharikiapp/widgets/home/contact_btn.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_city.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_image.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_required_job.dart';
@@ -14,6 +13,8 @@ import 'package:sharikiapp/widgets/posts_widgets/post_time.dart';
 import 'package:sharikiapp/widgets/posts_widgets/post_title.dart';
 import 'package:sharikiapp/widgets/profile/profile_image.dart';
 import 'package:sharikiapp/widgets/shared_widgets/post_info.dart';
+import 'package:sharikiapp/widgets/shared_widgets/contact_btn.dart';
+
 
 class UserProfile extends StatelessWidget {
   User user;

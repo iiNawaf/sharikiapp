@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:sharikiapp/models/validation.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/services/functions/navigations.dart';
+import 'package:sharikiapp/services/functions/show_alert_dialog.dart';
 import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
 import 'package:sharikiapp/widgets/loading/button_loading.dart';
@@ -68,19 +69,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             final result = await auth
                                 .forgotPassword(_emailController.text);
                             if (result == "") {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) {
-                                    return SharedAlertDialog(
-                                      title: 'تم الارسال',
-                                      content: 'تم ارسال رسالة الى بريدك الالكتروني تتضمن استعادة كلمة المرور.',
-                                      btnTitle: 'حسنا',
-                                      btnTitle2: "",
-                                      click: () => navigateToFirst(context),
-                                      click2: () {},
-                                    );
-                                  });
+                              showAlertDialog(
+                                context,
+                                false,
+                                'تم الارسال',
+                                'تم ارسال رسالة الى بريدك الالكتروني تتضمن استعادة كلمة المرور.',
+                                'حسنا',
+                                "",
+                                () => navigateToFirst(context),
+                                () {},
+                              );
                               setState(() {
                                 _emailController.clear();
                               });
