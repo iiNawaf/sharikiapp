@@ -67,7 +67,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
-        child: SharedAppBar(title: ""),
+        child: SharedAppBar(title: "الملف الشخصي"),
       ),
       body: auth.loggedInUser != null
           ? Padding(

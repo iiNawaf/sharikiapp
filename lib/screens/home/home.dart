@@ -4,7 +4,6 @@ import 'package:sharikiapp/models/time.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
 import 'package:sharikiapp/providers/post_provider.dart';
 import 'package:sharikiapp/screens/home/show_all_list.dart';
-import 'package:sharikiapp/screens/timeline/timeline.dart';
 import 'package:sharikiapp/services/functions/navigations.dart';
 import 'package:sharikiapp/styles/constant_styles.dart';
 import 'package:sharikiapp/widgets/shared_widgets/appbar.dart';
@@ -231,6 +230,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             color: whiteColor,
                                             borderRadius:
                                                 BorderRadius.circular(15),
+                                                boxShadow: [containerBoxShadow]
                                           ),
                                           padding: EdgeInsets.all(15),
                                           child: Column(
@@ -308,12 +308,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         )
                 ],
-              ),
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-              floatingActionButton: FloatingActionButton(
-                onPressed: ()=> navigateTo(context, TimelineScreen()),
-                backgroundColor: primaryColor,
-                child: Image.asset('./assets/icons/connect.png')
               ),
       ),
     );

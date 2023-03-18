@@ -13,7 +13,7 @@ class HomeAppBar extends StatelessWidget {
       floating: true,
       backgroundColor: bgColor,
       expandedHeight: 60,
-      title: Text(title, style: TextStyle(color: primaryColor, fontSize: 18)),
+      title: Text(title, style: TextStyle(color: textColor, fontSize: 18)),
       leading: GestureDetector(
         onTap: () => HomeScreen.scaffoldKey.currentState!.openDrawer(),
         child: Image.asset('./assets/icons/menu.png'),
@@ -24,14 +24,16 @@ class HomeAppBar extends StatelessWidget {
 
 class SharedAppBar extends StatelessWidget {
   String title;
-  SharedAppBar({required this.title});
+  Widget? leading;
+  SharedAppBar({required this.title, this.leading});
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Color.fromRGBO(0, 0, 0, 0),
       elevation: 0,
       centerTitle: true,
-      title: Text(title, style: TextStyle(color: primaryColor, fontSize: 18)),
+      title: Text(title, style: TextStyle(color: textColor, fontSize: 18)),
+      leading: leading,
     );
   }
 }

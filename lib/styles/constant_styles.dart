@@ -9,3 +9,9 @@ const inputTextColor = Color(0xffAFAFAF);
 const dangerColor = Color(0xffCC0E0E);
 const activeColor = Color(0xff31b482);
 const individualColor = Color(0xffffd500);
+
+const containerBoxShadow = BoxShadow(
+  color: bgColor,
+  blurRadius: 4,
+  offset: Offset(2, 2),
+);

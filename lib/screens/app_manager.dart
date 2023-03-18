@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sharikiapp/providers/auth_provider.dart';
-import 'package:sharikiapp/screens/add_new_request/add_new_request.dart';
 import 'package:sharikiapp/screens/home/home.dart';
 import 'package:sharikiapp/screens/profile/my_profile.dart';
+import 'package:sharikiapp/screens/timeline/timeline.dart';
 import 'package:sharikiapp/styles/constant_styles.dart';
 
 class AppManager extends StatefulWidget {
@@ -15,7 +15,7 @@ class AppManager extends StatefulWidget {
 class _AppManagerState extends State<AppManager> {
   List<Widget> _pages = [
     HomeScreen(), 
-    AddNewRequestScreen(), 
+    TimelineScreen(), 
     MyProfileScreen()
   ];
 
@@ -42,20 +42,8 @@ class _AppManagerState extends State<AppManager> {
       //     : "الملف الشخصي"
       //   ),
       // ),
-      body: Padding(
-        padding: EdgeInsets.all(15),
-        child: _pages.elementAt(AppManager.currentIndex),
-      ),
-      bottomNavigationBar: Container(
-            padding: EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              color: primaryColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15)
-              )
-            ),
-            child: BottomNavigationBar(
+      body: _pages.elementAt(AppManager.currentIndex),
+      bottomNavigationBar: BottomNavigationBar(
               backgroundColor: primaryColor,
               selectedItemColor: whiteColor,
               elevation: 0,
@@ -65,11 +53,10 @@ class _AppManagerState extends State<AppManager> {
               currentIndex: AppManager.currentIndex,
               items: <BottomNavigationBarItem>[
                 _bottomNavItem("./assets/icons/home.png", "●"),
-                _bottomNavItem("./assets/icons/add.png", "●"),
+                _bottomNavItem("./assets/icons/list.png", "●"),
                 _bottomNavItem("./assets/icons/user.png", "●")
               ]
             )
-          )
     );
   }
 }
