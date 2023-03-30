@@ -3,7 +3,7 @@ import 'package:sharikiapp/styles/constant_styles.dart';
 
 class SharedAlertDialog extends StatelessWidget {
   String title;
-  String content;
+  dynamic content;
   String btnTitle;
   String btnTitle2;
   Function() click;
@@ -24,10 +24,7 @@ class SharedAlertDialog extends StatelessWidget {
           title,
           style: TextStyle(fontSize: 18, color: primaryColor),
         ),
-        content: Text(
-          content,
-          style: TextStyle(color: textColor, fontSize: 14),
-        ),
+        content: content,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0))),
         actions: [

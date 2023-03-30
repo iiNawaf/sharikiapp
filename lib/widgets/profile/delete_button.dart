@@ -23,7 +23,9 @@ class DeleteButton extends StatelessWidget {
                   ? ButtonLoading()
                   : SharedAlertDialog(
                       title: "حذف الحساب",
-                      content: "هل متأكد من حذف حسابك؟",
+                      content: Text("هل متأكد من حذف حسابك؟",
+                      style: TextStyle(color: textColor, fontSize: 14),
+                      ),
                       btnTitle: "نعم",
                       btnTitle2: "لا",
                       click: () async {

@@ -8,6 +8,11 @@ ThemeData defaultTheme = ThemeData(
   splashColor: Colors.transparent,
   highlightColor: Colors.transparent,
   iconTheme: IconThemeData(color: textColor),
+  appBarTheme: AppBarTheme(
+    iconTheme: IconThemeData(
+      color: subTextColor
+      ),
+  ),
   textTheme: TextTheme(
     titleMedium: TextStyle(
       color: textColor,
@@ -27,5 +32,5 @@ ThemeData defaultTheme = ThemeData(
       color: subTextColor,
       fontSize: 12,
     ),
-  )
+  ),
 );

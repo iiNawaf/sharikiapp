@@ -58,11 +58,11 @@ class HomeDrawer extends StatelessWidget {
             title: const Text('اعلاناتي'),
             onTap: () => navigateTo(context, MyPosts())
           ),
-          ListTile(
-            leading: Icon(Icons.person),
-            title: const Text('الملف الشخصي'),
-            onTap: () => navigateTo(context, MyProfileScreen())
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.person),
+          //   title: const Text('الملف الشخصي'),
+          //   onTap: () => navigateTo(context, MyProfileScreen())
+          // ),
           ListTile(
             leading: Icon(Icons.logout),
             title: const Text('تسجيل الخروج'),

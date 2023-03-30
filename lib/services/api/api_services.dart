@@ -4,7 +4,7 @@ import 'package:sharikiapp/widgets/loading/fetching_data.dart';
 import 'package:http/http.dart' as http;
 
 class ApiServices {
-  final _baseUrl = "http://localhost:4000/";
+  final _baseUrl = "http://localhost:3000/";
   get baseUrl => _baseUrl;
 
     Future<bool> checkConnectivity(BuildContext context) async {
